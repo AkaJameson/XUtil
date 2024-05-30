@@ -60,7 +60,33 @@ EventBus.Default.UnSubscribe();
 
 
 
-Xin.IniParser
+###Xin.IniParser
 
-Ini文件解析器
+Ini文件解析器，提供Ini文件解析，添加，修改等功能。
+
+```
+IniFile iniFile = new IniFile(path);
+//读取指定得Value
+iniFile.ReadValue(section,key);
+//读取KeyValuePairs
+iniFile.ReadKeyValuePairsInSection(section);
+//修改节点名字
+iniFile.EditSection(oldSection, newSection);
+//修改节点下key名字
+iniFile.EditKey(Section,oldKey,newKey);
+//修改节点下对应Key得Value名字
+iniFile.EditValue(section,key,value);
+//添加keyValue
+iniFile.AddKeyValueInSection("xxxx", "xxxx", "xxxx");
+//添加节点
+iniFile.AddSection("pilipala");
+//保存 会覆盖源文件，导致注释消失
+iniFile.Save();
+
+//支持Idispose释放资源
+using(IniFile inif = new IniFile(Path))
+{
+    //ToDo
+}
+```
 

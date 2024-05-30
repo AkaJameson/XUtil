@@ -41,6 +41,7 @@
             _workerId = workerId;
             _datacenterId = datacenterId;
             this.timeCallBackHandler = timeCallBackHandler;
+
         }
 
         public long NextId()

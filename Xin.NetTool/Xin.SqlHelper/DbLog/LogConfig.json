@@ -1,0 +1,12 @@
+{
+  "LogFileName": "Log",
+  "SuccessLogName": "SuccessLog",
+  "ErrorLogName": "ErrorLog",
+  "ExpectionLogName": "ExpectionLog",
+  "WarningLogName": "WarningLog",
+  "SuccessSaveDays": 10,
+  "ErrorSaveDays": 20,
+  "ExpectionSaveDays": 20,
+  "WarningSaveDays": 20
+
+}

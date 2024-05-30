@@ -48,7 +48,7 @@ EventBus.Default.Subscribe();
 EventBus.Default.UnSubscribe();
 ```
 
-###Xin.SqlHelper
+### Xin.SqlHelper
 
 实现对mysql，oracle，sqlite,mssql数据库操作的一致性。
 
@@ -60,7 +60,7 @@ EventBus.Default.UnSubscribe();
 
 
 
-###Xin.IniParser
+### Xin.IniParser
 
 Ini文件解析器，提供Ini文件解析，添加，修改等功能。
 

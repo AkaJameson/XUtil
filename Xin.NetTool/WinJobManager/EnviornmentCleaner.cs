@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Transactions;
 
-namespace Xin.JobManager
+namespace Xin.NetTool.JobManager
 {
     /// <summary>
     /// 功能：实现对主机变量名为Path的内容清理

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.SnowFlake
+namespace Xin.NetTool.SnowFlake
 {
     /// <summary>
     /// Created by Xinjingjue

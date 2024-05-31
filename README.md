@@ -1,6 +1,6 @@
 ## Xin.NetTool
 
-### Xin.SnowFlake
+### SnowFlake
 
 为了解决Guid 128位过长占据数据库的存储空间，并且无法再分布式系统中使用的原因。
 
@@ -11,7 +11,7 @@ SnowflakeIdGenerator generator = new SnowflakeIdGenerator(workerId,datacenterId,
 string id = generator.nextId();
 ```
 
-### Xin.JobManager
+### JobManager
 
   仅适用于windows平台
   作业对象，主要用于子进程管理。
@@ -32,7 +32,7 @@ EnviornmentCleanr cleaner = new EnviornmentCleanr();
 cleaner.ResetkeyPathInEnvironment();
 ```
 
-### Xin.EventBus
+### EventBus
 
 事件总线是对发布-订阅模式的一种实现。它是一种集中式事件处理机制，允许不同的组件之间进行彼此通信而又不需要相互依赖，达到一种解耦的目的。
 
@@ -48,19 +48,42 @@ EventBus.Default.Subscribe();
 EventBus.Default.UnSubscribe();
 ```
 
-###Xin.SqlHelper
+###EasyLog
 
-实现对mysql，oracle，sqlite,mssql数据库操作的一致性。
-
-目的是轻量化。
+一个跨平台的轻量化的简单Log日志，需要创建LogConfig.json。
 
 ```
+//json格式
+{
+  "LogFileName": "MYlOG",
+  "SuccessLogName": "SuccessLog",
+  "ErrorLogName": "ErrorLog",
+  "ExpectionLogName": "ExpectionLog",
+  "WarningLogName": "WarningLog",
+  "SuccessSaveDays": 10,
+  "ErrorSaveDays": 20,
+  "ExpectionSaveDays": 20,
+  "WarningSaveDays": 20
 
+}
+/*
+* 解释说明：LogFileName：根文件下的Log文件夹
+* "Success|Error|Expection|Warning LogName":成功，错误，异常，警告，四种日志文件的名字（不需* * 要后缀名）
+* SaveDays：日志会根据设置进行刷新，以日为单位进行刷新
+*/
+
+使用
+ static void Main(string[] args)
+ {
+ 	// 可以使用绝对路径，也可以使用相对路径，使用相对路径，将LogConfig.json属性设置如果较新则复制
+     LogSaver saver = new LogSaver("./LogConfig.json");
+     saver.LogWarning("This is a warning log");
+ }
 ```
 
 
 
-###Xin.IniParser
+###IniParser
 
 Ini文件解析器，提供Ini文件解析，添加，修改等功能。
 
@@ -89,4 +112,8 @@ using(IniFile inif = new IniFile(Path))
     //ToDo
 }
 ```
+
+### SysInfo
+
+**仅Windows平台可用**：通过WMI获取设备硬件信息，轻量化无另外插件集成。
 

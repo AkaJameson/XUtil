@@ -82,10 +82,7 @@ EventBus.Default.UnSubscribe();
 
 
 
-<<<<<<< HEAD
 ###IniParser
->>>>>>> refs/remotes/origin/main
-
 Ini文件解析器，提供Ini文件解析，添加，修改等功能。
 
 ```

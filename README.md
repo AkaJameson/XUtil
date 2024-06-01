@@ -48,7 +48,7 @@ EventBus.Default.Subscribe();
 EventBus.Default.UnSubscribe();
 ```
 
-###EasyLog
+### EasyLog
 一个跨平台的轻量化的简单Log日志，需要创建LogConfig.json。
 
 ```
@@ -82,7 +82,7 @@ EventBus.Default.UnSubscribe();
 
 
 
-###IniParser
+### IniParser
 Ini文件解析器，提供Ini文件解析，添加，修改等功能。
 
 ```

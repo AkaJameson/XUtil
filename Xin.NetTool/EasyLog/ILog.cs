@@ -12,5 +12,10 @@ namespace Xin.NetTool.EasyLog
         void LogWarning(string log);
         void LogError(string log);
         void LogException(string log);
+
+        void LogSuccessAsync(string log);
+        void LogWarningAsync(string log);
+        void LogErrorAsync(string log);
+        void LogExceptionAsync(string log);
     }
 }

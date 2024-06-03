@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Xin.NetTool.EasyLog
 {
-    public class LogSaver:ILog
+    public class LogSaver : ILog
     {
         private static string JsonfilePath;
         private static LogConfig LogConfig;
@@ -121,6 +121,46 @@ namespace Xin.NetTool.EasyLog
                     {
                     }
                 }
+            }
+        }
+
+        public async void LogSuccessAsync(string log)
+        {
+            using (StreamWriter sw = new StreamWriter(LogPathDict[LogType.Success].Item1, true, Encoding.UTF8))
+            {
+                string writerMessage = $"Success: [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {log}";
+
+                await sw.WriteAsync(writerMessage);
+            }
+        }
+
+        public async void LogWarningAsync(string log)
+        {
+            using (StreamWriter sw = new StreamWriter(LogPathDict[LogType.Warning].Item1, true, Encoding.UTF8))
+            {
+                string writerMessage = $"Success: [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {log}";
+
+                await sw.WriteAsync(writerMessage);
+            }
+        }
+
+        public async void LogErrorAsync(string log)
+        {
+            using (StreamWriter sw = new StreamWriter(LogPathDict[LogType.Error].Item1, true, Encoding.UTF8))
+            {
+                string writerMessage = $"Success: [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {log}";
+
+                await sw.WriteAsync(writerMessage);
+            }
+        }
+
+        public async void LogExceptionAsync(string log)
+        {
+            using (StreamWriter sw = new StreamWriter(LogPathDict[LogType.Exception].Item1, true, Encoding.UTF8))
+            {
+                string writerMessage = $"Success: [{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}] {log}";
+
+                await sw.WriteAsync(writerMessage);
             }
         }
     }

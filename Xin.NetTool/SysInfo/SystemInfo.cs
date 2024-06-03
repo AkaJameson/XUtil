@@ -1,4 +1,6 @@
-﻿using System.Management;
+﻿using System.Diagnostics;
+using System.Management;
+using System.Net.NetworkInformation;
 using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -6,8 +8,15 @@ namespace Xin.NetTool.SysInfo
 {
     public class SystemInfo
     {
+        static PerformanceCounter cpuCounter;
+        static SystemInfo()
+        {
+            cpuCounter = new PerformanceCounter("Processor", "% Processor Time", "_Total");
+            cpuCounter.NextValue(); // 必须先调用一次，以初始化计数器
+            Thread.Sleep(1000);
+        }
         //获取CPU序列号
-        static string GetCpuID()
+        public static string GetCpuID()
         {
             try
             {
@@ -30,7 +39,7 @@ namespace Xin.NetTool.SysInfo
             finally { }
         }
         //获取MAC地址
-        static string GetMacAddress()
+        public static string GetMacAddress()
         {
             try
             {
@@ -56,7 +65,7 @@ namespace Xin.NetTool.SysInfo
             finally { }
         }
         //获取硬盘ID
-        static string GetHDid()
+        public static string GetHDid()
         {
             try
             {
@@ -77,8 +86,8 @@ namespace Xin.NetTool.SysInfo
             }
             finally { }
         }
-        //获取Ip地址
-        static string GetIPAddress()
+        //获取本地Ip地址
+        public static string GetLocalIPAddress()
         {
             try
             {
@@ -106,15 +115,20 @@ namespace Xin.NetTool.SysInfo
             finally { } 
         }
         //获取操作系统类型
-        static string GetOsType()
+        public static string GetOsType()
         {
             try
             {
                 return System.Environment.OSVersion.ToString();
             }
+            catch
+            {
+                return "unknow";
+            }
+            finally { }
         }
         //获取主机名
-        static string GetComputerName()
+        public static string GetComputerName()
         {
             try
             {
@@ -127,11 +141,11 @@ namespace Xin.NetTool.SysInfo
             finally { }
         }
         //获取操作系统架构
-        static string GetOSArchitecture()
+        public static string GetOSArchitecture()
         {
             try
             {
-                return RuntimeInformation.OSArchitecture.ToString();.
+                return RuntimeInformation.OSArchitecture.ToString();
             }
             catch
             {
@@ -140,7 +154,7 @@ namespace Xin.NetTool.SysInfo
             finally { }
         }
         //获取操作系统名称
-        static string GetOSDescription()
+        public static string GetOSDescription()
         {
             try
             {
@@ -152,6 +166,29 @@ namespace Xin.NetTool.SysInfo
             }
             finally { }
         }
+        //获取CPU使用率
+        public static float GetCPUTotalLoad()
+        {
+           return cpuCounter.NextValue();
+        }
+        //获取物理内存总量
+        public static long GetTotalMemory()
+        {
+            var ramCounter = new PerformanceCounter("Memory", "Available Bytes");
+            return (long)new PerformanceCounter("Memory", "Total Visible Memory Size").NextValue();
+        }
+        //获取已用内存量
+        public static long GetUsedMemory()
+        {
+            var ramCounter = new PerformanceCounter("Memory", "Available Bytes");
+            return (long)new PerformanceCounter("Memory", "Total Visible Memory Size").NextValue() - (long)ramCounter.NextValue();
+        }
+        //获取可用内存量
+        public static long GetAvailableMemory()
+        {
+            var ramCounter = new PerformanceCounter("Memory", "Available Bytes");
+            return (long)ramCounter.NextValue();
+        }
+        
     }
-
 }

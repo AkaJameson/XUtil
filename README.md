@@ -6,7 +6,7 @@
 
 使用c#重写了Twitter的雪花算法,线程安全，并且适合于分布式系统的使用（正确设置工区Id和作业Id）
 
-```
+```c#
 SnowflakeIdGenerator generator = new SnowflakeIdGenerator(workerId,datacenterId,timeCallBackHandler);
 string id = generator.nextId();
 ```
@@ -18,11 +18,10 @@ string id = generator.nextId();
   目前版本是只支持作业销毁拥有的子进程退出,仅支持了一个Job对象，需要使用可以修改Job句柄为可变参数
   通常可以定义一个全局静态变量使用
 
-```
+```c#
 Job job = new Job();
 job.AddProcess(xxxx);
 支持使用Using代码块包裹
-
 
 //环境变量清理功能：实现对主机变量名为Path的内容清理
     /// 1.清除所有无效路径
@@ -38,7 +37,7 @@ cleaner.ResetkeyPathInEnvironment();
 
 不依赖于高耦合的delegate和Event,实现了一个线程安全类型的事件总线形式。
 
-```
+```c#
 //组件已经实现了自动注册功能
 //发布，及触发
 EventBus.Default.publish();
@@ -51,7 +50,7 @@ EventBus.Default.UnSubscribe();
 ### EasyLog
 一个跨平台的轻量化的简单Log日志，需要创建LogConfig.json。
 
-```
+```c#
 //json格式
 {
   "LogFileName": "MYlOG",
@@ -77,15 +76,14 @@ EventBus.Default.UnSubscribe();
  	// 可以使用绝对路径，也可以使用相对路径，使用相对路径，将LogConfig.json属性设置如果较新则复制
      LogSaver saver = new LogSaver("./LogConfig.json");
      saver.LogWarning("This is a warning log");
+     saver.LogWarningAsync("This is a warning log");
  }
 ```
-
-
 
 ### IniParser
 Ini文件解析器，提供Ini文件解析，添加，修改等功能。
 
-```
+```c#
 IniFile iniFile = new IniFile(path);
 //读取指定得Value
 iniFile.ReadValue(section,key);
@@ -113,5 +111,76 @@ using(IniFile inif = new IniFile(Path))
 
 ### SysInfo
 
-**仅Windows平台可用**：通过WMI获取设备硬件信息，轻量化无另外插件集成。
+**仅Windows平台可用**（**跨平台时间计数器可以选择使用NetCore自带StopWatch**）：
+
+```c#
+//纳秒级计时器WinTimer，可以这么写
+ WinTimer winTimer = new WinTimer();
+ winTimer.Start();
+ Thread.Sleep(5000);
+ winTimer.Stop();
+ Console.WriteLine((string)winTimer);
+ Console.WriteLine((double)winTimer);
+ Console.WriteLine(winTimer.Duration);
+//也可以这么写
+using(WinTimer timer = WinTimer.Create())
+{
+    Thread.Sleep(5000);
+    timer.Stop();
+    Console.WriteLine(timer.Duration);
+}
+
+```
+
+```c#
+//静态类SystemInfo，获取硬件信息（无第三方依赖，仅能使用在windows平台）
+ //获取CPU序列号
+ public static string GetCpuID();
+ //获取MAC地址
+ public static string GetMacAddress();
+ //获取硬盘ID
+ public static string GetHDid();
+ //获取Ip地址
+ public static string GetIPAddress();
+ //获取操作系统类型
+ public static string GetOsType();
+ //获取主机名
+ public static string GetComputerName();
+ //获取操作系统架构
+ public static string GetOSArchitecture();
+ //获取操作系统名称
+ public static string GetOSDescription();
+ //获取CPU使用率
+ public static float GetCPUTotalLoad();
+ //获取物理内存总量
+ public static long GetTotalMemory();
+ //获取已用内存量
+ public static long GetUsedMemory();
+ //获取可用内存量
+ public static long GetAvailableMemory();
+```
+
+```c#
+//静态类NetInfo
+Task<string> GetPublicIPAsync();
+//获取网关和子网掩码
+void GetLocalNetworkInfo(out string gateway, out string subnetMask);
+//扫描局域网内所有在线设备，获取所有在线设备
+List<string> ScanLocalNetwork(string subnet, int timeout = 1000);
+//获取子网基地址
+string GetSubnet();
+```
+
+**跨平台**
+
+```c#
+ // 定时任务池
+ //MyScheduleTest继承ITaskTriggerHaneler实现Occour方法
+ //循环任务
+ ScheduleTasksPool.SetScheduleTask("helloworld", new MyScheduleTest(), true, 5);
+ ScheduleTasksPool.ActiveTask("helloworld");
+ //单次执行
+  ScheduleTasksPool.SetScheduleTask("helloworld2", new MyScheduleTest2(), false, 1);
+  ScheduleTasksPool.ActiveTask("helloworld2");
+```
 

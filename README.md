@@ -111,7 +111,7 @@ using(IniFile inif = new IniFile(Path))
 
 ### SysInfo
 
-**仅Windows平台可用**（**跨平台时间计数器可以选择使用NetCore自带StopWatch**）：
+**SystemInfo和Wintimer仅Windows平台可用**（**跨平台时间计数器可以选择使用NetCore自带StopWatch**）：
 
 ```c#
 //纳秒级计时器WinTimer，可以这么写
@@ -171,10 +171,8 @@ List<string> ScanLocalNetwork(string subnet, int timeout = 1000);
 string GetSubnet();
 ```
 
-**跨平台**
-
 ```c#
- // 定时任务池
+ // 定时任务池，定时执行任务
  //MyScheduleTest继承ITaskTriggerHaneler实现Occour方法
  //循环任务
  ScheduleTasksPool.SetScheduleTask("helloworld", new MyScheduleTest(), true, 5);

@@ -195,7 +195,38 @@ namespace Xin.NetTool.IniParser
                 throw new Exception("这个ini文件没有被修改过");
             }
         }
+        /// <summary>
+        /// 重新加载
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        public void Reload()
+        {
+            iniDictonary.Clear();
+            List<string> lines = File.ReadAllLines(filePath).Where(x => !string.IsNullOrEmpty(x) && !x.StartsWith(";")).ToList();
+            lines.ForEach(x => x.Trim());
+            string section = "default";
+            foreach (var line in lines)
+            {
+                if (line.StartsWith("[") && line.EndsWith("]"))
+                {
+                    section = line.Substring(1, line.Length - 2);
+                    if (!iniDictonary.ContainsKey(section))
+                    {
+                        Dictionary<string, string> keyValuePairs = new();
+                        iniDictonary.Add(section, keyValuePairs);
+                    }
+                    continue;
+                }
+                string[] keyvaluepair = line.Split(new[] { '=' });
 
+                if (section.Equals("default"))
+                {
+                    throw new Exception("当前ini文件的格式不正确");
+                }
+                iniDictonary[section].Add(keyvaluepair[0].Trim(), keyvaluepair[1].Trim());
+            }
+
+        }
         public void Dispose()
         {
             Dispose(true);

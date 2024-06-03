@@ -182,3 +182,41 @@ string GetSubnet();
   ScheduleTasksPool.ActiveTask("helloworld2");
 ```
 
+### Securencryption
+
+提供AES Base64 DES RSA MD5的加解密验证帮助静态类。
+
+```c#
+ //MD5Helper
+ string ComputeMd5Hash(string input);//一次加严
+ ComputeDoubleMd5Hash(string input);// 二次加严
+ VerifyDoubleMd5Hash(string input, string hash);//二次加严验证
+ VerifyMd5Hash(string input, string hash);//一次加严验证
+     
+     
+ //Base64Helper
+ string EncodeToBase64(string input);//转换成Base64编码
+ string DecodeFromBase64(string base64Input);//从Base64解码成UTF8编码
+ bool VerifyBase64Encoding(string input, string base64Encoded);//验证base64编码
+ bool VerifyBase64Decoding(string base64Input, string decoded);//验证base64解码
+
+
+ //DESHelper
+string Encrypt(string plainText, byte[] key = null, byte[] iv = null);//加密字符串，仅允许8位密钥和8位IV
+string Decrypt(string cipherText, byte[] key = null, byte[] iv = null);//解密字符串,仅支持8位密钥和8位IV
+bool VerifyEncryption(string plainText, string cipherText, byte[] key = null, byte[] iv = null);//验证给定的明文在加密后是否与提供的密文匹配
+
+
+//AESHelper
+string Encrypt(string plainText, byte[] key = null, byte[] iv = null);//加密字符串
+string Decrypt(string cipherText, byte[] key = null, byte[] iv = null);//解密字符串
+VerifyEncryption(string plainText, string cipherText, byte[] key = null, byte[] iv = null);//验证给定的明文在加密后是否与提供的密文匹配
+
+//RSAHelper
+void GenerateKeys(out string publicKey, out string privateKey);//生成RSA密钥对
+string Encrypt(string plainText, string publicKey);//使用RSA公钥加密字符串
+string Decrypt(string cipherText, string privateKey);//使用RSA私钥解密字符串
+string SignData(string message, string privateKey);//使用 RSA 私钥对字符串进行签名
+bool VerifyData(string message, string signature, string publicKey)//使用RSA公钥验证签名
+```
+

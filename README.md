@@ -220,3 +220,12 @@ string SignData(string message, string privateKey);//使用 RSA 私钥对字符�
 bool VerifyData(string message, string signature, string publicKey)//使用RSA公钥验证签名
 ```
 
+Export
+
+```c#
+//DATATABLE导出CSV
+void ExportToCSV(DataTable dt,string fullpathName);
+//CSV导入DataTable
+DataTable ImportCSVToDataTable(string fullpathName)
+```
+

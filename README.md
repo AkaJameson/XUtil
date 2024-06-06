@@ -99,6 +99,8 @@ iniFile.EditValue(section,key,value);
 iniFile.AddKeyValueInSection("xxxx", "xxxx", "xxxx");
 //添加节点
 iniFile.AddSection("pilipala");
+//重新加载
+iniFile.Reload();
 //保存 会覆盖源文件，导致注释消失
 iniFile.Save();
 

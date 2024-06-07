@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.Securencryption
+namespace Xin.DotnetUtil.Securencryption
 {
     public class Base64Helper
     {

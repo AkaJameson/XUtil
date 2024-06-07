@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Easy.Tool.Export
+namespace Xin.DotnetUtil.Export
 {
     public class ExportCSV
     {

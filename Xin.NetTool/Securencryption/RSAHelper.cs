@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.Securencryption
+namespace Xin.DotnetUtil.Securencryption
 {
     /// <summary>
     /// 包含 RSA 加密、解密、签名和验证功能

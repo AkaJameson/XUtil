@@ -1,4 +1,4 @@
-﻿namespace Xin.NetTool.SnowFlake
+﻿namespace Xin.DotnetUtil.SnowFlake
 {
     /// <summary>
     /// 雪花算法生成器，twitter公司的雪花算法的c#实现

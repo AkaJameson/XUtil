@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.SysInfo
+namespace Xin.DotnetUtil.SysInfo
 {
     /// <summary>
     /// 仅适用于windows,纯计时器

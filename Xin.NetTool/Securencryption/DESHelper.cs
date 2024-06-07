@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.Securencryption
+namespace Xin.DotnetUtil.Securencryption
 {
     /// <summary>
     /// DES(Data Encryption Standard)是目前最为流行的加密算法之一。DES是对称的，也就是说它使用同一个密钥来加密和解密数据。

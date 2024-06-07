@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.SysInfo
+namespace Xin.DotnetUtil.SysInfo
 {
     /// <summary>
     /// 定时任务池

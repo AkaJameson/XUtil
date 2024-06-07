@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.EasyLog
+namespace Xin.DotnetUtil.EasyLog
 {
     public class LogSaver : ILog
     {

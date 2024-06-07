@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net.NetworkInformation;
 using System.Net;
 using System.Net.Sockets;
-namespace Xin.NetTool.SysInfo
+namespace Xin.DotnetUtil.SysInfo
 {
     public class NetInfo
     {

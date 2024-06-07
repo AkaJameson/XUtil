@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.IniParser
+namespace Xin.DotnetUtil.IniParser
 {
     /// <summary>
     /// 默认支持Utf-8

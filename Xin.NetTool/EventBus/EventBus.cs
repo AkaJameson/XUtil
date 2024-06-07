@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.EventBus
+namespace Xin.DotnetUtil.EventBus
 {
     /// <summary>
     /// EventData继承IEventData，用于事件处理器的参数

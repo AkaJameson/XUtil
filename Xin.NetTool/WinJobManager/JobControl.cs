@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace Xin.NetTool.JobManager
+namespace Xin.DotnetUtil.JobManager
 {
         #region Helper classes
         /// <summary>

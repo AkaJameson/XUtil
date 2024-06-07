@@ -4,7 +4,7 @@ using System.Net.NetworkInformation;
 using System.Runtime;
 using System.Runtime.InteropServices;
 using System.Text;
-namespace Xin.NetTool.SysInfo
+namespace Xin.DotnetUtil.SysInfo
 {
     public class SystemInfo
     {

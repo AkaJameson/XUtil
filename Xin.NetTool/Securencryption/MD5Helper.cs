@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Xin.NetTool.Securencryption
+namespace Xin.DotnetUtil.Securencryption
 {
     /// <summary>
     /// MD5加密是最常见的加密方式，因为MD5是不可逆的，所以很多系统的密码都是用MD5加密保存的。

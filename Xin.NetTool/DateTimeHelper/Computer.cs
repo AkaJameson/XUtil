@@ -109,7 +109,7 @@ namespace Xin.DotnetUtil.DateTimeHelper
             return DateTime.Now.ToString("HH:mm:ss");
         }
         /// <summary>
-        /// 返回当前时间的标准时间格式
+        /// 返回当前时间的标准时间格式yyyy-MM-dd HH:mm:ss:fffffff
         /// </summary>
         /// <returns>yyyy-MM-dd HH:mm:ss:fffffff</returns>
         public static string GetDateTimeF()

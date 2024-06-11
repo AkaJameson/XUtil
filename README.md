@@ -1,4 +1,4 @@
-## Xin.NetTool
+## DotNetUtility
 
 ### SnowFlake（雪花算法）
 
@@ -225,7 +225,7 @@ bool VerifyData(string message, string signature, string publicKey)//使用RSA�
 ### Export（导出）
 
 ```c#
-//DATATABLE导出CSV
+//静态类ExportCSV  DATATABLE导出CSV
 void ExportToCSV(DataTable dt,string fullpathName);
 //CSV导入DataTable
 DataTable ImportCSVToDataTable(string fullpathName);

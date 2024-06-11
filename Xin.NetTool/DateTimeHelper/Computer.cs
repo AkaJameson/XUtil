@@ -122,7 +122,7 @@ namespace Xin.DotnetUtil.DateTimeHelper
         /// <returns></returns>
 		public static long GetUtcTimeTicks()
 		{
-            return DateTime.UtcNow.Ticks();
+            return DateTime.UtcNow.Ticks;
 		}
         #endregion
 

@@ -220,6 +220,10 @@ string Encrypt(string plainText, string publicKey);//使用RSA公钥加密字符
 string Decrypt(string cipherText, string privateKey);//使用RSA私钥解密字符串
 string SignData(string message, string privateKey);//使用 RSA 私钥对字符串进行签名
 bool VerifyData(string message, string signature, string publicKey)//使用RSA公钥验证签名
+    
+//CRC16Modbus 
+ byte[] ComputeChecksumBytes(byte[] bytes) //计算CRC校验值
+ bool ValidateModbusRTUCRC(byte[] data, byte[] crcBytes)//验证数据是否通过CRC校验
 ```
 
 Export

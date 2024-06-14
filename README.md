@@ -270,7 +270,7 @@ double diffYear(DateTime start, DateTime end)
  string GetNowStandardDayTime()//获取“yyyy-MM-dd”
  string GetNowStandardTime()//获取当前时间的"HH:mm:ss"
  string GetDateTimeF()//返回当前时间的标准时间格式yyyy-MM-dd HH:mm:ss:fffffff
- string GetUtcTimeTicks()获取当前时间戳（可以当作唯一标识)
+ string GetUtcTimeTicks()//获取当前时间戳（可以当作唯一标识)
  double ConvertToUnixTimestamp(DateTime date)//转换时间为unix时间戳(date为UTC时间)
 //日常判断
  bool IsLeapYear(DateTime dateTime)//是否是闰年

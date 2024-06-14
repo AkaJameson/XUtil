@@ -1,6 +1,6 @@
-## Xin.NetTool
+## DotNetUtility
 
-### SnowFlake
+### SnowFlake（雪花算法）
 
 为了解决Guid 128位过长占据数据库的存储空间，并且无法再分布式系统中使用的原因。
 
@@ -11,7 +11,7 @@ SnowflakeIdGenerator generator = new SnowflakeIdGenerator(workerId,datacenterId,
 string id = generator.nextId();
 ```
 
-### JobManager
+### JobManager（作业模式）
 
   仅适用于windows平台
   作业对象，主要用于子进程管理。
@@ -31,7 +31,7 @@ EnviornmentCleanr cleaner = new EnviornmentCleanr();
 cleaner.ResetkeyPathInEnvironment();
 ```
 
-### EventBus
+### EventBus（事件总线）
 
 事件总线是对发布-订阅模式的一种实现。它是一种集中式事件处理机制，允许不同的组件之间进行彼此通信而又不需要相互依赖，达到一种解耦的目的。
 
@@ -47,7 +47,7 @@ EventBus.Default.Subscribe();
 EventBus.Default.UnSubscribe();
 ```
 
-### EasyLog
+### EasyLog（简单日志）
 一个跨平台的轻量化的简单Log日志，需要创建LogConfig.json。
 
 ```c#
@@ -80,7 +80,7 @@ EventBus.Default.UnSubscribe();
  }
 ```
 
-### IniParser
+### IniParser（ini解析器）
 Ini文件解析器，提供Ini文件解析，添加，修改等功能。
 
 ```c#
@@ -111,7 +111,7 @@ using(IniFile inif = new IniFile(Path))
 }
 ```
 
-### SysInfo
+### SysInfo（系统信息）
 
 **SystemInfo和Wintimer仅Windows平台可用**（**跨平台时间计数器可以选择使用NetCore自带StopWatch**）：
 
@@ -184,7 +184,7 @@ string GetSubnet();
   ScheduleTasksPool.ActiveTask("helloworld2");
 ```
 
-### Securencryption
+### Securencryption（加解密）
 
 提供AES Base64 DES RSA MD5的加解密验证帮助静态类。
 
@@ -226,12 +226,57 @@ bool VerifyData(string message, string signature, string publicKey)//使用RSA�
  bool ValidateModbusRTUCRC(byte[] data, byte[] crcBytes)//验证数据是否通过CRC校验
 ```
 
-Export
+### Export（导出）
 
 ```c#
-//DATATABLE导出CSV
+//静态类ExportCSV  DATATABLE导出CSV
 void ExportToCSV(DataTable dt,string fullpathName);
 //CSV导入DataTable
-DataTable ImportCSVToDataTable(string fullpathName)
+DataTable ImportCSVToDataTable(string fullpathName);
+
+//多线程下载器 支持断点续传和进度保存
+//使用方法，通过线程进行演示
+Thread thread = new Thread(async () =>
+{
+    MultiThreadDownloader multiThreadDownloader = new MultiThreadDownloader(断点保存文件的地址！不带文件的名字);
+    await multiThreadDownloader.DownloadFilesAsync(new List<string> { "xxxx" },下载到的地址);
+    Console.WriteLine("下载完成");
+}); thread.start();
+
+//事件回调
+/// <summary>
+/// 下载完成事件
+/// </summary>
+Action OnDownloadDoneHandler;
+/// <summary>
+/// 开始下载事件
+/// </summary>
+Action OnDownloadStartHandler;
+```
+
+### DateTimerHelper(时间计算帮助类)
+
+```c#
+//时间差
+double DiffMilliSecond(DateTime start, DateTime end)
+double DiffSecound(DateTime start, DateTime end)
+double DiffMinute(DateTime start, DateTime end)
+double diffHour(DateTime start, DateTime end)
+double diffDay(DateTime start, DateTime end)
+double diffWeek(DateTime start, DateTime end)
+double diffMonth(DateTime start, DateTime end)
+double diffYear(DateTime start, DateTime end)
+//当前时间计算
+ string GetNowStandardDayTime()//获取“yyyy-MM-dd”
+ string GetNowStandardTime()//获取当前时间的"HH:mm:ss"
+ string GetDateTimeF()//返回当前时间的标准时间格式yyyy-MM-dd HH:mm:ss:fffffff
+ string GetUtcTimeTicks()获取当前时间戳（可以当作唯一标识)
+ double ConvertToUnixTimestamp(DateTime date)//转换时间为unix时间戳(date为UTC时间)
+//日常判断
+ bool IsLeapYear(DateTime dateTime)//是否是闰年
+ string DayInWeek(DateTime dateTime,bool isChinese)//今天是周几
+ DateTime GetDateWithYearAndDay(int year, int day)//根据年和天数获取日期
+ double GetWeekofYear(DateTime dateTime)//获取一年中的第几周
+ double GetDayofYear(DateTime dateTime)//获取一年中的第几天
 ```
 

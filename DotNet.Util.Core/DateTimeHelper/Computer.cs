@@ -116,7 +116,14 @@ namespace Xin.DotnetUtil.DateTimeHelper
         {
             return DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fffffff");
         }
-
+		/// <summary>
+        /// 获取当前时间戳（可以当作唯一标识)
+        /// </summary>
+        /// <returns></returns>
+		public static long GetUtcTimeTicks()
+		{
+            return DateTime.UtcNow.Ticks;
+		}
         #endregion
 
         #region convert

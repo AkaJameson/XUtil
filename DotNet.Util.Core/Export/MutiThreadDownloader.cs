@@ -28,7 +28,7 @@ namespace Xin.DotnetUtil.Export
             }
             else
             {
-                progressFileName =Path.Combine(progresssavePath, TimeComputer.GetDateTimeF() + "_progressFile.txt");
+                progressFileName =Path.Combine(progresssavePath, DateTime.UtcNow.Ticks+ "progressFile.txt");
 
             }
         }
@@ -42,7 +42,8 @@ namespace Xin.DotnetUtil.Export
             }
             Dictionary<string, long> progress = LoadProgress();
             List<Task> downloadTasks = new List<Task>();
-            foreach(var url in urls)
+            OnDownloadStartHandler?.Invoke();
+            foreach (var url in urls)
             {
                 lock (downloadTasks)
                 {
@@ -51,7 +52,7 @@ namespace Xin.DotnetUtil.Export
             }
 
             await Task.WhenAll(downloadTasks);
-
+            OnDownloadDoneHandler?.Invoke();
         }
 
         private async Task DownLoadFileAsync(string url, string destinationFolder, Dictionary<string, long> progress)
@@ -59,7 +60,7 @@ namespace Xin.DotnetUtil.Export
             Uri uri = new Uri(url);
             string fileName = Path.GetFileName(uri.LocalPath);
             string destinationPath = Path.Combine(destinationFolder, fileName);
-            long existingLength = progress?.ContainsKey(url) == true ? progress[url] : 0;
+            long existingLength = progress.ContainsKey(url) == true ? progress[url] : 0;
 
             try
             {
@@ -107,12 +108,8 @@ namespace Xin.DotnetUtil.Export
                     string[] parts = line.Split(',');
                     progress.Add(parts[0], long.Parse(parts[1]));
                 }
+            }
                 return progress;
-            }
-            else
-            {
-                throw new Exception("进度文件不存在");
-            }
         }
 
         /// <summary>
@@ -143,6 +140,14 @@ namespace Xin.DotnetUtil.Export
 
             File.WriteAllLines(progressFileName, lines);
         }
-
+        /// <summary>
+        /// 下载完成事件
+        /// </summary>
+        Action OnDownloadDoneHandler;
+        /// <summary>
+        /// 开始下载事件
+        /// </summary>
+        Action OnDownloadStartHandler;
+        
     }
 }

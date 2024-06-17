@@ -14,6 +14,12 @@ namespace Xin.DotnetUtil.Collection
         public T Value { get; set; }
         public List<ITreeNode<T>> Children { get; set; }
 
+        public TreeNode(T value)
+        {
+            this.Value = value;
+            Children = new List<ITreeNode<T>>();
+        }
+
         public TreeNode()
         {
             Children = new List<ITreeNode<T>>();

@@ -280,3 +280,31 @@ double diffYear(DateTime start, DateTime end)
  double GetDayofYear(DateTime dateTime)//获取一年中的第几天
 ```
 
+### Collection（集合）
+
+提供树形结构创建和BFS先中后序路径查询（非常规BFS，BFS最短路径）和DFS遍历。
+
+```c#
+//工厂类创建
+ ITreeRoot<MyStruct> treeRoot = TreeFactory.CreateRoot(new MyStruct("root"));
+ //构造方法创建
+ ITreeRoot<MyStruct> treeRoot = new TreeNode<MyStruct>(new MyStruct("root"));
+ //工厂类创建添加节点
+ var node1 = TreeFactory.CreateNode(new MyStruct("child1"));
+ var node2 = TreeFactory.CreateNode(new MyStruct("child1"));
+ TreeFactory.AddChild(treeRoot, node1);
+ TreeFactory.AddChild(treeRoot, node2);
+ //TreeNode 直接添加节点
+ treeRoot.AddChild(node1);
+ // 工厂类提供BFS前序遍历 中序遍历 后续遍历
+ TreeFactory.FindChildDFSPreOrder<MyStruct>(treeRoot, node1.Value, out List<MyStruct> findPath);
+ //TreeRoot或者TreeNode提供BFS 前序遍历 中序遍历 后续遍历(从指定节点遍历）
+ treeRoot.FindChildDFSInOrder(node2.Value, out List<MyStruct> findPath);
+treeRoot.FindChildDFSPostOrder(node2.Value, out List<MyStruct> findPath);
+ //BFS通过自定义迭代器提供
+ foreach (var item in treeRoot)
+ {
+     Console.WriteLine(item.name);
+ }
+```
+

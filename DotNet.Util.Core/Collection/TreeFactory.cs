@@ -17,7 +17,7 @@ namespace Xin.DotnetUtil.Collection
         /// <returns></returns>
         public static ITreeRoot<T> CreateRoot<T>(T value) where T : struct
         {
-            return new TreeNode<T> { Value = value };
+            return new TreeNode<T>{ Value = value };
         }
         /// <summary>
         /// 创建节点

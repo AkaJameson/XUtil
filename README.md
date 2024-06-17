@@ -301,7 +301,7 @@ double diffYear(DateTime start, DateTime end)
  //TreeRoot或者TreeNode提供BFS 前序遍历 中序遍历 后续遍历(从指定节点遍历）
  treeRoot.FindChildDFSInOrder(node2.Value, out List<MyStruct> findPath);
 treeRoot.FindChildDFSPostOrder(node2.Value, out List<MyStruct> findPath);
- //BFS通过自定义迭代器提供
+ //DFS通过自定义迭代器提供
  foreach (var item in treeRoot)
  {
      Console.WriteLine(item.name);

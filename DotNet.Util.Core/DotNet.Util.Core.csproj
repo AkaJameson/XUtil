@@ -4,7 +4,7 @@
     <TargetFrameworks>net8.0;net6.0;</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
-    <BaseOutputPath>E:\Xin18236158701\Projectroot\DotNet.Util\DotNet.Util.dll</BaseOutputPath>
+    <BaseOutputPath>E:\Xin18236158701\Projectroot\DotNetUtility\DotNet.Util.Dllfile</BaseOutputPath>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
 

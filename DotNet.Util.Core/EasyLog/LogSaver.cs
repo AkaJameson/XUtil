@@ -9,7 +9,7 @@ namespace Xin.DotnetUtil.EasyLog
 {
     public class LogSaver : ILog
     {
-        private static string JsonfilePath;
+       
         private static LogConfig LogConfig;
         private string baseDirectory;
         private static Dictionary<LogType, Tuple<string, int>> LogPathDict = new();

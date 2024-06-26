@@ -1,4 +1,4 @@
-## DotNetUtility
+## DotNet.Util.Core
 
 ### SnowFlake（雪花算法）
 
@@ -7,8 +7,11 @@
 使用c#重写了Twitter的雪花算法,线程安全，并且适合于分布式系统的使用（正确设置工区Id和作业Id）
 
 ```c#
+using Xin.DotnetUtil.SnowFlake
+    
 SnowflakeIdGenerator generator = new SnowflakeIdGenerator(workerId,datacenterId,timeCallBackHandler);
 string id = generator.nextId();
+//timeCallBackHandler 是对时间回溯异常的处理委托
 ```
 
 ### JobManager（作业模式）
@@ -19,6 +22,8 @@ string id = generator.nextId();
   通常可以定义一个全局静态变量使用
 
 ```c#
+using  Xin.DotnetUtil.JobManager
+
 Job job = new Job();
 job.AddProcess(xxxx);
 支持使用Using代码块包裹
@@ -38,6 +43,8 @@ cleaner.ResetkeyPathInEnvironment();
 不依赖于高耦合的delegate和Event,实现了一个线程安全类型的事件总线形式。
 
 ```c#
+using  Xin.DotnetUtil.EventBus
+
 //组件已经实现了自动注册功能
 //发布，及触发
 EventBus.Default.publish();
@@ -51,6 +58,7 @@ EventBus.Default.UnSubscribe();
 一个跨平台的轻量化的简单Log日志，需要创建LogConfig.json。
 
 ```c#
+using Xin.DotnetUtil.EasyLog
 //json格式
 {
   "LogFileName": "MYlOG",
@@ -84,6 +92,7 @@ EventBus.Default.UnSubscribe();
 Ini文件解析器，提供Ini文件解析，添加，修改等功能。
 
 ```c#
+using Xin.DotnetUtil.IniFile
 IniFile iniFile = new IniFile(path);
 //读取指定得Value
 iniFile.ReadValue(section,key);
@@ -116,6 +125,8 @@ using(IniFile inif = new IniFile(Path))
 **SystemInfo和Wintimer仅Windows平台可用**（**跨平台时间计数器可以选择使用NetCore自带StopWatch**）：
 
 ```c#
+using Xin.DotnetUtil.SysInfo
+
 //纳秒级计时器WinTimer，可以这么写
  WinTimer winTimer = new WinTimer();
  winTimer.Start();
@@ -135,6 +146,8 @@ using(WinTimer timer = WinTimer.Create())
 ```
 
 ```c#
+
+using Xin.DotnetUtil.SysInfo
 //静态类SystemInfo，获取硬件信息（无第三方依赖，仅能使用在windows平台）
  //获取CPU序列号
  public static string GetCpuID();
@@ -163,6 +176,7 @@ using(WinTimer timer = WinTimer.Create())
 ```
 
 ```c#
+using Xin.DotnetUtil.SysInfo
 //静态类NetInfo
 Task<string> GetPublicIPAsync();
 //获取网关和子网掩码
@@ -174,7 +188,9 @@ string GetSubnet();
 ```
 
 ```c#
- // 定时任务池，定时执行任务
+ 
+using Xin.DotnetUtil.SysInfo
+// 定时任务池，定时执行任务
  //MyScheduleTest继承ITaskTriggerHaneler实现Occour方法
  //循环任务
  ScheduleTasksPool.SetScheduleTask("helloworld", new MyScheduleTest(), true, 5);
@@ -189,7 +205,8 @@ string GetSubnet();
 提供AES Base64 DES RSA MD5的加解密验证帮助静态类。
 
 ```c#
- //MD5Helper
+using Xin.DotnetUtil.Securecryption
+//MD5Helper
  string ComputeMd5Hash(string input);//一次加严
  ComputeDoubleMd5Hash(string input);// 二次加严
  VerifyDoubleMd5Hash(string input, string hash);//二次加严验证
@@ -229,6 +246,7 @@ bool VerifyData(string message, string signature, string publicKey)//使用RSA�
 ### Export（导出）
 
 ```c#
+Xin.DotnetUtil.Export
 //静态类ExportCSV  DATATABLE导出CSV
 void ExportToCSV(DataTable dt,string fullpathName);
 //CSV导入DataTable
@@ -257,6 +275,7 @@ Action OnDownloadStartHandler;
 ### DateTimerHelper(时间计算帮助类)
 
 ```c#
+using Xin.DotnetUtil.DateTimeHelper
 //时间差
 double DiffMilliSecond(DateTime start, DateTime end)
 double DiffSecound(DateTime start, DateTime end)
@@ -285,6 +304,7 @@ double diffYear(DateTime start, DateTime end)
 提供树形结构创建和BFS先中后序路径查询（非常规BFS，BFS最短路径）和DFS遍历。
 
 ```c#
+using Xin.DotnetUtil.Collection
 //工厂类创建
  ITreeRoot<MyStruct> treeRoot = TreeFactory.CreateRoot(new MyStruct("root"));
  //构造方法创建
@@ -306,5 +326,36 @@ treeRoot.FindChildDFSPostOrder(node2.Value, out List<MyStruct> findPath);
  {
      Console.WriteLine(item.name);
  }
+```
+
+### Verify(校验工具)
+
+```c#
+using Xin.DotnetUtil.Verify
+//CRCUtil类
+/*
+	提供标准Crc校验功能
+	 CRC_8，CRC_8_CDMA2000, CRC_8_DARC,  CRC_8_DVB_S2 ,CRC_8_EBU ,CRC_8_I_CODE, CRC_8_ITU, CRC_8_ROHC, CRC_8_MAXIM, CRC_8_WCDMA, CRC_16_ARC, CRC_16_AUG_CCITT, CRC_16_BUYPASS, CRC_16_CCITT_FALSE, CRC_16_CDMA2000, CRC_16_DDS_110 CRC_16_DECT_R, CRC_16_DECT_X,
+CRC_16_DNP, CRC_16_EN_13757, CRC_16_GENIBUS, CRC_16_KERMIT, CRC_16_MAXIM, CRC_16_MCRF4XX, CRC_16_MODBUS, CRC_16_RIELLO CRC_16_T10_DIF, CRC_16_TELEDISK, CRC_16_TMS37157, CRC_16_USB,
+CRC_16_X25, CRC_16_XMODEM, CRC_A, CRC_32, CRC_32_BZIP2, CRC_32_JAMCRC, CRC_32_MPEG2, CRC_32_POSIX, CRC_32_SATA, CRC_32_XFER, CRC_32C, CRC_32D, CRC_32Q
+
+	提供自定义CRCParameter校验功能
+*/
+ //示例
+     uint Compute(byte[] buffer,CRCCrcAlgorithm cRCCrcAlgorithm, bool littleEndian, int offset=0)
+      uint Compute(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, int offset, bool littleEndian, int count)
+     uint Compute(byte[] buffer, CRCParamter standardCRCParamter,bool littleEndian, int offset = 0)
+    uint Compute(byte[] buffer, CRCParamter standardCRCParamter, int offset, bool littleEndian,int count)
+    byte[] ComputeBytes(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, bool littleEndian, int offset = 0)
+     byte[] ComputeBytes(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, int offset, int count, bool littleEndian)
+    byte[] ComputeBytes(byte[] buffer, CRCParamter standardCRCParamter, bool littleEndian, int offset = 0)
+     byte[] ComputeBytes(byte[] buffer, CRCParamter standardCRCParamter, int offset,int count , bool littleEndian)
+    
+    
+    //SimpleVerify类
+    //校验和
+     byte  CalculateChecksum(byte[] data)
+    //异或校验
+     byte CalculateXorChecksum(byte[] data)
 ```
 

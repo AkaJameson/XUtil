@@ -1,4 +1,4 @@
-## DotNet.Util.Core
+## DotNetUtil
 
 ### SnowFlake（雪花算法）
 

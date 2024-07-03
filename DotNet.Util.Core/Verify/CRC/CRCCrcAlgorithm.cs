@@ -30,6 +30,8 @@ namespace Xin.DotnetUtil.Verify.CRC
 
         CRC_16_ARC,
 
+        CRC_16_CCITT,
+
         CRC_16_AUG_CCITT,
 
         CRC_16_BUYPASS,

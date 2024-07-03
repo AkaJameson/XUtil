@@ -29,6 +29,7 @@ namespace Xin.DotnetUtil.Verify.CRC
     { CRCCrcAlgorithm.CRC_16_BUYPASS, new CRCParamter { BitWidth = 16, Polynomial = 0x8005, InitValue = 0x0000, XORValue = 0x0000, InputReverse = false, OutPutReverse = false } },
     { CRCCrcAlgorithm.CRC_16_CCITT_FALSE, new CRCParamter { BitWidth = 16, Polynomial = 0x1021, InitValue = 0xFFFF, XORValue = 0x0000, InputReverse = false, OutPutReverse = false } },
     { CRCCrcAlgorithm.CRC_16_CDMA2000, new CRCParamter { BitWidth = 16, Polynomial = 0xC867, InitValue = 0xFFFF, XORValue = 0x0000, InputReverse = false, OutPutReverse = false } },
+    { CRCCrcAlgorithm.CRC_16_CCITT, new CRCParamter { BitWidth = 16, Polynomial = 0x1021,InitValue = 0x0000, XORValue = 0x0000, InputReverse = true, OutPutReverse = true } },
     { CRCCrcAlgorithm.CRC_16_DDS_110, new CRCParamter { BitWidth = 16, Polynomial = 0x8005, InitValue = 0x800D, XORValue = 0x0000, InputReverse = false, OutPutReverse = false } },
     { CRCCrcAlgorithm.CRC_16_DECT_R, new CRCParamter { BitWidth = 16, Polynomial = 0x0589, InitValue = 0x0000, XORValue = 0x0001, InputReverse = false, OutPutReverse = false } },
     { CRCCrcAlgorithm.CRC_16_DECT_X, new CRCParamter { BitWidth = 16, Polynomial = 0x0589, InitValue = 0x0000, XORValue = 0x0000, InputReverse = false, OutPutReverse = false } },
@@ -59,6 +60,13 @@ namespace Xin.DotnetUtil.Verify.CRC
     { CRCCrcAlgorithm.CRC_32D, new CRCParamter { BitWidth = 32, Polynomial = 0xA833982B, InitValue = 0xFFFFFFFF, XORValue = 0xFFFFFFFF, InputReverse = true, OutPutReverse = true } },
     { CRCCrcAlgorithm.CRC_32Q, new CRCParamter { BitWidth = 32, Polynomial = 0x814141AB, InitValue = 0x00000000, XORValue = 0x00000000, InputReverse = false, OutPutReverse = false } }
 };
+        
+
+        public static CRCParamter GetCrcParamterFromDict(CRCCrcAlgorithm cRCCrcAlgorithm)
+        {
+            standradCrcParamterDict.TryGetValue(cRCCrcAlgorithm, out CRCParamter crcParamterValue);
+            return crcParamterValue;
+        }
 
 
         // 反转
@@ -93,7 +101,7 @@ namespace Xin.DotnetUtil.Verify.CRC
             }
             return reflected;
         }
-        private static uint ComputeCRC(byte[] data, int bitWidth, uint polynomial, uint initialValue, uint xorOut, bool inputReflect, bool outputReflect,bool littleEndian=false)
+        private static uint ComputeCRC(byte[] data, int bitWidth, uint polynomial, uint initialValue, uint xorOut, bool inputReflect, bool outputReflect)
         {
             uint crc = initialValue;
 
@@ -119,99 +127,57 @@ namespace Xin.DotnetUtil.Verify.CRC
             {
                 crc = Reflect(crc, bitWidth);
             }
-            if (littleEndian)
-            {
-                return ToLittleEndian((crc ^ xorOut) & ((1u << bitWidth) - 1), bitWidth);
-            }
 
             return (crc ^ xorOut) & ((1u << bitWidth) - 1);
         }
 
         // 小端转换
-        public static uint ToLittleEndian(uint value, int bitWidth)
-        {
-            uint result = 0;
-            for (int i = 0; i < bitWidth; i += 8)
-            {
-                result |= ((value >> i) & 0xFF) << (bitWidth - 8 - i);
-            }
-            return result;
-        }
+      
         #region 外层调用
 
-        public static uint Compute(byte[] buffer,CRCCrcAlgorithm cRCCrcAlgorithm, bool littleEndian, int offset=0)
+        public static uint Compute(byte[] buffer,CRCCrcAlgorithm cRCCrcAlgorithm, int offset=0)
         {
             standradCrcParamterDict.TryGetValue(cRCCrcAlgorithm, out CRCParamter standardCRCParamter);
             if(standardCRCParamter == null)
             {
                 throw new Exception("当前标准CRC算法字典中不存在这个类型");
             }
-            return ComputeCRC(buffer.Skip(offset).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial,standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse,littleEndian);
+            return ComputeCRC(buffer.Skip(offset).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial,standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse);
 
 
         }
-        public static uint Compute(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, int offset, bool littleEndian, int count)
+        public static uint Compute(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, int offset, int count)
         {
             standradCrcParamterDict.TryGetValue(cRCCrcAlgorithm, out CRCParamter standardCRCParamter);
             if (standardCRCParamter == null)
             {
                 throw new Exception("当前标准CRC算法字典中不存在这个类型");
             }
-            return ComputeCRC(buffer.Skip(offset).Take(count).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse, littleEndian);
+            return ComputeCRC(buffer.Skip(offset).Take(count).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse);
 
 
         }
 
-        public static uint Compute(byte[] buffer, CRCParamter standardCRCParamter,bool littleEndian, int offset = 0)
+        public static uint Compute(byte[] buffer, CRCParamter standardCRCParamter, int offset = 0)
         {
-            return ComputeCRC(buffer.Skip(offset).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse, littleEndian);
+            return ComputeCRC(buffer.Skip(offset).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse);
 
         }
 
 
-        public static uint Compute(byte[] buffer, CRCParamter standardCRCParamter, int offset, bool littleEndian,int count)
+        public static uint Compute(byte[] buffer, CRCParamter standardCRCParamter, int offset,int count)
         {
-            return ComputeCRC(buffer.Skip(offset).Take(count).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse, littleEndian);
+            return ComputeCRC(buffer.Skip(offset).Take(count).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse);
         }
 
-        public static byte[] ComputeBytes(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, bool littleEndian, int offset = 0)
-        {
-            standradCrcParamterDict.TryGetValue(cRCCrcAlgorithm, out CRCParamter standardCRCParamter);
-            if (standardCRCParamter == null)
-            {
-                throw new Exception("当前标准CRC算法字典中不存在这个类型");
-            }
-            uint CrcValue = ComputeCRC(buffer.Skip(offset).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse, littleEndian);
-
-            byte[] result;
-            switch (standardCRCParamter.BitWidth)
-            {
-                case 8:
-                    result = new byte[] { (byte)CrcValue };
-                    break;
-                case 16:
-                    result = BitConverter.GetBytes((ushort)CrcValue);
-                    break;
-                case 32:
-                    result = BitConverter.GetBytes(CrcValue);
-                    break;
-                default:
-                    throw new Exception("不支持的CRC位宽");
-            }
-            if (littleEndian != BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(result);
-            }
-            return result;
-        }
-        public static byte[] ComputeBytes(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, int offset, int count, bool littleEndian)
+        public static byte[] ComputeBytes(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, int offset = 0)
         {
             standradCrcParamterDict.TryGetValue(cRCCrcAlgorithm, out CRCParamter standardCRCParamter);
             if (standardCRCParamter == null)
             {
                 throw new Exception("当前标准CRC算法字典中不存在这个类型");
             }
-            uint CrcValue = ComputeCRC(buffer.Skip(offset).Take(count).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse, littleEndian);
+            uint CrcValue = ComputeCRC(buffer.Skip(offset).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse);
 
             byte[] result;
             switch (standardCRCParamter.BitWidth)
@@ -228,16 +194,47 @@ namespace Xin.DotnetUtil.Verify.CRC
                 default:
                     throw new Exception("不支持的CRC位宽");
             }
-            if (littleEndian != BitConverter.IsLittleEndian)
+            if (!BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(result);
+            }
+            return result;
+        }
+        public static byte[] ComputeBytes(byte[] buffer, CRCCrcAlgorithm cRCCrcAlgorithm, int offset, int count)
+        {
+            standradCrcParamterDict.TryGetValue(cRCCrcAlgorithm, out CRCParamter standardCRCParamter);
+            if (standardCRCParamter == null)
+            {
+                throw new Exception("当前标准CRC算法字典中不存在这个类型");
+            }
+            uint CrcValue = ComputeCRC(buffer.Skip(offset).Take(count).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse);
+
+            byte[] result;
+            switch (standardCRCParamter.BitWidth)
+            {
+                case 8:
+                    result = new byte[] { (byte)CrcValue };
+                    break;
+                case 16:
+                    result = BitConverter.GetBytes((ushort)CrcValue);
+                    break;
+                case 32:
+                    result = BitConverter.GetBytes(CrcValue);
+                    break;
+                default:
+                    throw new Exception("不支持的CRC位宽");
+            }
+            if (!BitConverter.IsLittleEndian)
             {
                 Array.Reverse(result);
             }
             return result;
 
         }
-        public static byte[] ComputeBytes(byte[] buffer, CRCParamter standardCRCParamter, bool littleEndian, int offset = 0)
+        public static byte[] ComputeBytes(byte[] buffer, CRCParamter standardCRCParamter, int offset = 0)
         {
-            uint CrcValue = ComputeCRC(buffer.Skip(offset).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse, littleEndian);
+            uint CrcValue = ComputeCRC(buffer.Skip(offset).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, 
+                standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse);
 
             byte[] result;
             switch (standardCRCParamter.BitWidth)
@@ -254,15 +251,16 @@ namespace Xin.DotnetUtil.Verify.CRC
                 default:
                     throw new Exception("不支持的CRC位宽");
             }
-            if (littleEndian != BitConverter.IsLittleEndian)
+            if ( !BitConverter.IsLittleEndian)
             {
                 Array.Reverse(result);
             }
             return result;
         }
-        public static byte[] ComputeBytes(byte[] buffer, CRCParamter standardCRCParamter, int offset,int count , bool littleEndian)
+        public static byte[] ComputeBytes(byte[] buffer, CRCParamter standardCRCParamter, int offset,int count )
         {
-            uint CrcValue = ComputeCRC(buffer.Skip(offset).Take(count).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse, littleEndian);
+            uint CrcValue = ComputeCRC(buffer.Skip(offset).Take(count).ToArray(), standardCRCParamter.BitWidth, standardCRCParamter.Polynomial, 
+                standardCRCParamter.InitValue, standardCRCParamter.XORValue, standardCRCParamter.InputReverse, standardCRCParamter.OutPutReverse);
 
             byte[] result;
             switch (standardCRCParamter.BitWidth)
@@ -279,7 +277,7 @@ namespace Xin.DotnetUtil.Verify.CRC
                 default:
                     throw new Exception("不支持的CRC位宽");
             }
-            if (littleEndian != BitConverter.IsLittleEndian)
+            if ( ! BitConverter.IsLittleEndian)
             {
                 Array.Reverse(result);
             }

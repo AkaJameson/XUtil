@@ -359,3 +359,36 @@ CRC_16_X25, CRC_16_XMODEM, CRC_A, CRC_32, CRC_32_BZIP2, CRC_32_JAMCRC, CRC_32_MP
      byte CalculateXorChecksum(byte[] data)
 ```
 
+
+
+### RegexHelper(正则校验)
+
+基于网上常见的实现。
+
+```c#
+using Xin.DotnetUtil
+/// <summary>
+/// 获取已经匹配到的集合
+/// </summary>
+/// <param name="input"></param>
+/// <param name="pattern"></param>
+/// <returns></returns>
+public static MatchCollection FindMatches(string input, string pattern)
+//常用正则判断
+ /// 判断是否是Email地址
+ public static bool IsEmail(string input)
+ /// 判断域名
+ public static bool IsDomain(string input)
+ ///判断URL
+ public static bool IsUrl(string input)
+ /// 判断手机号码
+ public static bool IsPhoneNumber(string input)
+ ///判断电话号码 
+ public static bool IsTelephoneNumber(string input)
+ /// 国内电话号码(0511-4405222、021-87888822)
+ public static bool IsChineseTelephoneNumber(string input)
+ ///身份证号
+ public static bool IsIdCardNumber(string input)
+ // 密码，账号，数字，字符，网络等等 都在RegexHelper类中
+```
+

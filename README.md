@@ -392,3 +392,62 @@ public static MatchCollection FindMatches(string input, string pattern)
  // 密码，账号，数字，字符，网络等等 都在RegexHelper类中
 ```
 
+
+
+### HttpRequest(HttpClient封装)
+
+```c#
+using Xin.DotnetUtil
+
+//一个HttpClient的封装
+//实现类似JS的动态接收数据，（只支持Application/json)其他的用的时候直接写吧，实现了Get Post方法（没人写标准的Http请求吧。。）
+
+ using (var httpClientHelper = new HttpClientHelper())
+    {
+ //example       httpClientHelper.AddDefaultRequestHeader("Authorization", "Bearer YOUR_TOKEN");
+
+        var getResponse = await httpClientHelper.GetAsync("https://api.example.com/data");
+        if (getResponse.IsSuccess)
+        {
+            dynamic data = getResponse.Data;
+            Console.WriteLine($"Test1: {data.Test1}, Test2: {data.Test2}");
+        }
+        else
+        {
+            var errorMessage = getResponse.ErrorMessage;
+            Console.WriteLine($"Error: {errorMessage}");
+        }
+    }
+
+```
+
+
+
+### HttpResponseHelper
+
+统一后端返回格式
+
+```c#
+using Xin.DotnetUtil.HttpResponseHelper
+ public class ApiResponse
+ {
+     public int Code { get; set; }
+
+     public dynamic Data { get; set; }
+
+     public string? Message { get; set; }
+
+     public string Status { get; set; }
+
+     public int Total { get; set; }
+
+ }
+ 
+ static ApiResponse Success(dynamic data)
+ //分页使用
+ static ApiResponse Success(dynamic data, int total)
+ static ApiResponse Error(string msg)
+ //不附加进程，在中间用看哪里报错，笨方法。。
+ static ApiResponse Debug(string msg, dynamic data = null)
+```
+

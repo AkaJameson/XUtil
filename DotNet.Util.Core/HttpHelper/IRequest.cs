@@ -18,12 +18,12 @@ namespace DotNet.Util.Core.HttpHelper
         string GetString(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header);
         Task<T> PostAsync<T>(string url) where T : class;
         T Post<T>(string url) where T : class;
-        Task<T> PostAsync<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header,IDictionary<string,string>? body) where T : class;
-        T Post<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header, IDictionary<string, string> body) where T : class;
+        Task<T> PostAsync<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header,object? body) where T : class;
+        T Post<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header,object? body) where T : class;
         Task<string> PostStringAsync(string url);
         string PostString(string url);
-        Task<string> PostStringAsync(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header, IDictionary<string, string>? body);
-        string PostString(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header, IDictionary<string, string>? body);
+        Task<string> PostStringAsync(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header, object? body);
+        string PostString(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header,object? body);
         public void SetBaseAddress(string baseAddress);
     }
 }

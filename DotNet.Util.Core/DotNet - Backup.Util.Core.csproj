@@ -6,7 +6,6 @@
     <Nullable>annotations</Nullable>
     <BaseOutputPath>../DotNet.Util.Dllfile</BaseOutputPath>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Authors>xinjingjue</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">

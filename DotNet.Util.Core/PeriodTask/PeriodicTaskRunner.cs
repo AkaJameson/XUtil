@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DotNet.Util.Core.PeriodTask;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Xin.DotnetUtil.PeriodTask
 {
-    public class PeriodicTaskRunner
+    public class PeriodicTaskRunner:IPeriodTask
     {
         private readonly Func<Task> _taskToRun;
         private readonly TimeSpan _timeout;

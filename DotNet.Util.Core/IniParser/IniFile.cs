@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,13 +8,15 @@ using System.Threading.Tasks;
 namespace Xin.DotnetUtil.IniParser
 {
     /// <summary>
-    /// 默认支持Utf-8
+    /// 默认支持Utf-8  目前只是个玩具
     /// </summary>
-    public class IniFile:IDisposable
+    public class IniFile
     {
         private string filePath;
-        private Dictionary<string,Dictionary<string,string>> iniDictonary;
+        private ConcurrentDictionary<string,ConcurrentDictionary<string,string>> iniDictonary;
+        private static object _lock = new object();
         private bool isEdit = false;
+        private bool isLoad = false;
         public IniFile(string filePath)
         {
             iniDictonary = new();
@@ -23,6 +26,8 @@ namespace Xin.DotnetUtil.IniParser
 
         public void LoadIni()
         {
+            if (isLoad)
+                return;
             if (!File.Exists(filePath))
             {
                 throw new Exception("未找到这个文件");
@@ -43,8 +48,8 @@ namespace Xin.DotnetUtil.IniParser
                     section = line.Substring(1, line.Length - 2);
                     if (!iniDictonary.ContainsKey(section))
                     {
-                        Dictionary<string, string> keyValuePairs = new();
-                        iniDictonary.Add(section, keyValuePairs);
+                        ConcurrentDictionary<string, string> keyValuePairs = new();
+                        iniDictonary[section] = keyValuePairs;
                     }
                     continue;
                 }
@@ -54,8 +59,9 @@ namespace Xin.DotnetUtil.IniParser
                 {
                     throw new Exception("当前ini文件的格式不正确");
                 }
-                iniDictonary[section].Add(keyvaluepair[0].Trim(), keyvaluepair[1].Trim());
+                iniDictonary[section][keyvaluepair[0].Trim()]= keyvaluepair[1].Trim();
             }
+            isLoad = true;
 
         }
 
@@ -81,29 +87,10 @@ namespace Xin.DotnetUtil.IniParser
         /// </summary>
         /// <param name="section"></param>
         /// <returns></returns>
-        public Dictionary<string,string> ReadKeyValuePairsInSection(string section)
+        public ConcurrentDictionary<string,string> ReadKeyValuePairsInSection(string section)
         {
-            return iniDictonary[section];
-        }
-        /// <summary>
-        /// 修改值
-        /// </summary>
-        /// <param name="section"></param>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public bool EditValue(string section,string key,string value)
-        {
-            if (iniDictonary.ContainsKey(section))
-            {
-                if (iniDictonary[section].ContainsKey(key))
-                {
-                    iniDictonary[section][key]=value;
-                    isEdit = true;
-                    return true;
-                }
-            }
-            return false;
+            iniDictonary.TryGetValue(section, out var keyValuePairs);
+            return keyValuePairs;
         }
         /// <summary>
         /// 修改节点
@@ -115,9 +102,9 @@ namespace Xin.DotnetUtil.IniParser
         {
             if (iniDictonary.ContainsKey(oldSection))
             {
-                Dictionary<string, string> keyValuePairs = iniDictonary[oldSection];
-                iniDictonary.Remove(oldSection);
-                iniDictonary.Add(newSection, keyValuePairs);
+                ConcurrentDictionary<string, string> keyValuePairs = iniDictonary[oldSection];
+                iniDictonary.Remove(oldSection,out ConcurrentDictionary<string,string> result);
+                iniDictonary[newSection] = keyValuePairs;
                 isEdit = true;
                 return true;
             }
@@ -135,8 +122,8 @@ namespace Xin.DotnetUtil.IniParser
             if (iniDictonary.ContainsKey(Section) && iniDictonary[Section].ContainsKey(oldKey))
             {
                 string value = iniDictonary[Section][oldKey];
-                iniDictonary[Section].Remove(oldKey);
-                iniDictonary[Section].Add(newKey,value);
+                iniDictonary[Section].Remove(oldKey,out string result);
+                iniDictonary[Section][newKey]=value;
                 isEdit = true;
             }
             return false;
@@ -145,8 +132,8 @@ namespace Xin.DotnetUtil.IniParser
         {
             if (!iniDictonary.ContainsKey(section))
             {
-                Dictionary<string, string> keyValuePairs = new();
-                iniDictonary.Add(section, keyValuePairs);
+                ConcurrentDictionary<string, string> keyValuePairs = new();
+                iniDictonary[section]=keyValuePairs;
                 isEdit = true;
                 return true;
             }
@@ -161,11 +148,13 @@ namespace Xin.DotnetUtil.IniParser
             if (!iniDictonary.ContainsKey(section))
             {
                 AddSection(section);
-                iniDictonary[section].Add(key, value);
+                iniDictonary[section][key] = value;
+                isEdit = true;
             }
             else
             {
-                iniDictonary[section].Add(key, value);
+                iniDictonary[section][key]= value;
+                isEdit = true;
             }
         }
         /// <summary>
@@ -174,25 +163,29 @@ namespace Xin.DotnetUtil.IniParser
         /// <returns></returns>
         public void Save()
         {
-            if (isEdit)
+            lock (_lock)
             {
-                using (StreamWriter sw = new StreamWriter(filePath,false))
+                if (isEdit)
                 {
-                    foreach(var dict in iniDictonary.Keys)
+                    using (StreamWriter sw = new StreamWriter(filePath, false))
                     {
-                        sw.WriteLine($"[{dict}]");
-                        foreach(var keyvalue in iniDictonary[dict])
+                        foreach (var dict in iniDictonary.Keys)
                         {
-                            sw.WriteLine($"{keyvalue.Key} = {keyvalue.Value}");
+                            sw.WriteLine($"[{dict}]");
+                            foreach (var keyvalue in iniDictonary[dict])
+                            {
+                                sw.WriteLine($"{keyvalue.Key} = {keyvalue.Value}");
+                            }
+                            sw.WriteLine();
+                            sw.WriteLine();
                         }
-                        sw.WriteLine();
-                        sw.WriteLine();
                     }
+                    isEdit = false;
                 }
-            }
-            else
-            {
-                throw new Exception("这个ini文件没有被修改过");
+                else
+                {
+                    throw new Exception("这个ini文件没有被修改过");
+                }
             }
         }
         /// <summary>
@@ -201,43 +194,35 @@ namespace Xin.DotnetUtil.IniParser
         /// <exception cref="Exception"></exception>
         public void Reload()
         {
-            iniDictonary.Clear();
-            List<string> lines = File.ReadAllLines(filePath).Where(x => !string.IsNullOrEmpty(x) && !x.StartsWith(";")).ToList();
-            lines.ForEach(x => x.Trim());
-            string section = "default";
-            foreach (var line in lines)
+            lock (_lock)
             {
-                if (line.StartsWith("[") && line.EndsWith("]"))
+                iniDictonary.Clear();
+                List<string> lines = File.ReadAllLines(filePath).Where(x => !string.IsNullOrEmpty(x) && !x.StartsWith(";")).ToList();
+                lines.ForEach(x => x.Trim());
+                string section = "default";
+                foreach (var line in lines)
                 {
-                    section = line.Substring(1, line.Length - 2);
-                    if (!iniDictonary.ContainsKey(section))
+                    if (line.StartsWith("[") && line.EndsWith("]"))
                     {
-                        Dictionary<string, string> keyValuePairs = new();
-                        iniDictonary.Add(section, keyValuePairs);
+                        section = line.Substring(1, line.Length - 2);
+                        if (!iniDictonary.ContainsKey(section))
+                        {
+                            ConcurrentDictionary<string, string> keyValuePairs = new();
+                            iniDictonary[section] = keyValuePairs;
+                        }
+                        continue;
                     }
-                    continue;
+                    string[] keyvaluepair = line.Split(new[] { '=' });
+
+                    if (section.Equals("default"))
+                    {
+                        throw new Exception("当前ini文件的格式不正确");
+                    }
+                    iniDictonary[section][keyvaluepair[0].Trim()] = keyvaluepair[1].Trim();
+
                 }
-                string[] keyvaluepair = line.Split(new[] { '=' });
+                isLoad = true;
 
-                if (section.Equals("default"))
-                {
-                    throw new Exception("当前ini文件的格式不正确");
-                }
-                iniDictonary[section].Add(keyvaluepair[0].Trim(), keyvaluepair[1].Trim());
-            }
-
-        }
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public void Dispose(bool b)
-        {
-            if (b)
-            {
-                iniDictonary = null;
             }
         }
     }

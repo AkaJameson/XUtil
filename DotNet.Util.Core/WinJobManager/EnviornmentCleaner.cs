@@ -47,17 +47,13 @@ namespace Xin.DotnetUtil.JobManager
         /// </summary>
         /// <param name="preClean"></param>
         /// <returns></returns>
-        private List<string> CleanPath(List<string> preClean)
+        private List<string> CleanPath(List<string> preClean, string[] reserveFile)
         {
             List<string> cleanedPaths = new List<string>();
-            //这两个参数可以任意修改
-            string[] filesToCheck = { "HHTech.CSM2018.Starter.exe", "HHTech.CSM2018.Client.exe" };
             string[] systemPath = { "C:\\Windows\\System32", "C:\\Windows", "C:\\Users\\Administrator\\AppData\\Local\\Microsoft\\WindowsApps" };
             //获取硬盘驱动列表
             var drives = DriveInfo.GetDrives().Select(d => d.Name).ToArray();
-            // 用linq过滤路径(where中两个条件（1.以盘符开头2.路径中不存在这两个文件）
-            cleanedPaths = preClean.Where(path => drives.Any(drive => path.StartsWith(drive) && !filesToCheck.Any(file => File.Exists(Path.Combine(path, file))))).ToList();
-            //cleanedPaths中添加systempath，条件是（cleaned中任意一个path和系统变量都不相同）
+            cleanedPaths = preClean.Where(path => drives.Any(drive => path.StartsWith(drive) && !reserveFile.Any(file => File.Exists(Path.Combine(path, file))))).ToList();
             cleanedPaths.AddRange(systemPath.Where(sysPath => !cleanedPaths.Any(path =>path == sysPath)));
             return cleanedPaths;
         }
@@ -84,7 +80,7 @@ namespace Xin.DotnetUtil.JobManager
         /// <summary>
         /// 组合上述函数,事务模式
         /// </summary>
-        public string ResetkeyPathInEnvironment()
+        public string ResetkeyPathInEnvironment(string[] reserveFile)
         {
             System.IO.StringWriter writer = new System.IO.StringWriter();
             string cleanpath = "";
@@ -97,7 +93,7 @@ namespace Xin.DotnetUtil.JobManager
                     //分割
                     List<string> splitPath = SpiltBySpecificSymbols(wholepath);
                     //清理
-                    List<string> cleanedPath = CleanPath(splitPath);
+                    List<string> cleanedPath = CleanPath(splitPath, reserveFile);
                     //重新写入
                     cleanpath = ReWriteToEnvironment(cleanedPath);
                     //都执行完成，事务完成

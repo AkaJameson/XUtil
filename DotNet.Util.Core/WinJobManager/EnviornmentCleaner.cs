@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Transactions;
+﻿using System.Transactions;
 
 namespace Xin.DotnetUtil.JobManager
 {

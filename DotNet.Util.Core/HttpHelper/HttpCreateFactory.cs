@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DotNet.Util.Core.HttpHelper
+﻿namespace Xin.DotnetUtil.HttpHelper
 {
     public static class HttpCreateFactory
     {

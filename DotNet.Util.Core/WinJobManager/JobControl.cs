@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Xin.DotnetUtil.JobManager
 {
-        #region Helper classes
-        /// <summary>
-        /// ！ 仅适用于windows平台
-        ///  作业对象，主要用于子进程管理。
-        ///  目前版本是只支持作业销毁拥有的子进程退出
-        ///  通常可以定义一个全局静态变量使用
-        /// </summary>
-        public class Job : IDisposable
+    #region Helper classes
+    /// <summary>
+    /// ！ 仅适用于windows平台
+    ///  作业对象，主要用于子进程管理。
+    ///  目前版本是只支持作业销毁拥有的子进程退出
+    ///  通常可以定义一个全局静态变量使用
+    /// </summary>
+    public class Job : IDisposable
         {
             [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
             static extern IntPtr CreateJobObject(IntPtr a, string lpName);

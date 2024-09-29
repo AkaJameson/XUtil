@@ -1,11 +1,4 @@
-﻿using DotNet.Util.Core.PeriodTask;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Xin.DotnetUtil.PeriodTask
+﻿namespace Xin.DotnetUtil.PeriodTask
 {
     public class PeriodicTaskRunner:IPeriodTask
     {

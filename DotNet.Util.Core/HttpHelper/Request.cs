@@ -1,25 +1,21 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http.Json;
-using System.Reflection.PortableExecutable;
 using System.Text;
-using System.Threading.Tasks;
+using Xin.DotnetUtil.Extension;
 
-namespace DotNet.Util.Core.HttpHelper
+namespace Xin.DotnetUtil.HttpHelper
 {
     internal class Request:IRequest
     {
         private readonly HttpClient _httpClient;
-        public static Request Instance { get; } = new Request();
-        public Request()
+        public Request(double? Timeout = null)
         {
             _httpClient = new HttpClient(new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true // 忽略 SSL 认证
             });
+            if(Timeout.HasValue)
+                _httpClient.Timeout = TimeSpan.FromSeconds(Timeout.Value);
         }
         public void SetBaseAddress(string baseAddress)
         {
@@ -33,23 +29,6 @@ namespace DotNet.Util.Core.HttpHelper
                 url = url.Contains("?") ? $"{url}&{queryString}" : $"{url}?{queryString}";
             }
             return url;
-        }
-        private HttpContent BuildHttpContent(IDictionary<string, string> body, string contentType)
-        {
-            HttpContent content;
-            if (contentType == "application/json")
-            {
-                // 序列化为 JSON
-                var json = JsonConvert.SerializeObject(body);
-                content = new StringContent(json, Encoding.UTF8, "application/json");
-            }
-            else
-            {
-                // 默认使用 x-www-form-urlencoded
-                content = new FormUrlEncodedContent(body);
-            }
-
-            return content;
         }
 
         private void SetHeaders(IDictionary<string, string>? headers)
@@ -71,7 +50,10 @@ namespace DotNet.Util.Core.HttpHelper
             SetHeaders(null);
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<T>();
+            var stringData = await response.Content.ReadAsStringAsync();
+            //使用Newtonsoft 忽略大小写
+            return stringData.ConvertToObject<T>();
+            
         }
 
         public T Get<T>(string url) where T : class
@@ -79,7 +61,9 @@ namespace DotNet.Util.Core.HttpHelper
             SetHeaders(null);
             var response = _httpClient.GetAsync(url).Result;
             response.EnsureSuccessStatusCode();
-            return response.Content.ReadFromJsonAsync<T>().Result;
+            var stringData = response.Content.ReadAsStringAsync().Result;
+            //使用Newtonsoft 忽略大小写
+            return stringData.ConvertToObject<T>();
         }
 
         public async Task<T> GetAsync<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers) where T : class
@@ -88,7 +72,9 @@ namespace DotNet.Util.Core.HttpHelper
             SetHeaders(headers);
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<T>();
+            var stringData = await response.Content.ReadAsStringAsync();
+            //使用Newtonsoft 忽略大小写
+            return stringData.ConvertToObject<T>();
         }
 
         public T Get<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers) where T : class
@@ -97,7 +83,9 @@ namespace DotNet.Util.Core.HttpHelper
             SetHeaders(headers);
             var response = _httpClient.GetAsync(url).Result;
             response.EnsureSuccessStatusCode();
-            return response.Content.ReadFromJsonAsync<T>().Result;
+            var stringData = response.Content.ReadAsStringAsync().Result;
+            //使用Newtonsoft 忽略大小写
+            return stringData.ConvertToObject<T>();
         }
 
         public async Task<string> GetStringAsync(string url)
@@ -142,7 +130,9 @@ namespace DotNet.Util.Core.HttpHelper
             SetHeaders(null);
             var response = await _httpClient.PostAsync(url, null);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<T>();
+            var stringData = await response.Content.ReadAsStringAsync();
+            //使用Newtonsoft 忽略大小写
+            return stringData.ConvertToObject<T>();
         }
 
         public T Post<T>(string url) where T : class
@@ -150,46 +140,35 @@ namespace DotNet.Util.Core.HttpHelper
             SetHeaders(null);
             var response = _httpClient.PostAsync(url, null).Result;
             response.EnsureSuccessStatusCode();
-            return response.Content.ReadFromJsonAsync<T>().Result;
+            var stringData = response.Content.ReadAsStringAsync().Result;
+            //使用Newtonsoft 忽略大小写
+            return stringData.ConvertToObject<T>();
         }
 
-        public async Task<T> PostAsync<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers, IDictionary<string, string>? body) where T : class
+        public async Task<T> PostAsync<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers, object? body) where T : class
         {
             url = BuildUrlWithParameters(url, parameters);
             SetHeaders(headers);
-            string contentType;
-            if (headers is not null&& headers["Content-Type"]!=null)
-            {
-                contentType = headers["Content-Type"];
-            }
-            else
-            {
-                contentType = "application/json";
-            }
-            var content = BuildHttpContent(body, contentType);
-            var response = await _httpClient.PostAsync(url, content);
+            var data = JsonConvert.SerializeObject(body);
+            HttpContent content = body is null ? null : new StringContent(data, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(url,content);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<T>();
+            var stringData = await response.Content.ReadAsStringAsync();
+            //使用Newtonsoft 忽略大小写
+            return stringData.ConvertToObject<T>();
         }
 
-        public T Post<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers, IDictionary<string, string>? body) where T : class
+        public T Post<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers, object? body ) where T : class
         {
             url = BuildUrlWithParameters(url, parameters);
             SetHeaders(headers);
-            string contentType;
-            if (headers is not null && headers["Content-Type"] != null)
-            {
-                contentType = headers["Content-Type"];
-            }
-            else
-            {
-                contentType = "application/json";
-            }
-            var content = BuildHttpContent(body, contentType);
-
+            var data = JsonConvert.SerializeObject(body);
+            HttpContent content = body is null ? null : new StringContent(data, Encoding.UTF8, "application/json");
             var response = _httpClient.PostAsync(url, content).Result;
             response.EnsureSuccessStatusCode();
-            return response.Content.ReadFromJsonAsync<T>().Result;
+            var stringData = response.Content.ReadAsStringAsync().Result;
+            //使用Newtonsoft 忽略大小写
+            return stringData.ConvertToObject<T>();
         }
 
         public async Task<string> PostStringAsync(string url)
@@ -207,48 +186,27 @@ namespace DotNet.Util.Core.HttpHelper
             return response.Content.ReadAsStringAsync().Result;
         }
 
-        public async Task<string> PostStringAsync(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers, IDictionary<string, string> body)
+        public async Task<string> PostStringAsync(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers, object? body)
         {
             url = BuildUrlWithParameters(url, parameters);
             SetHeaders(headers);
-
-            string contentType;
-            if (headers is not null && headers["Content-Type"] != null)
-            {
-                contentType = headers["Content-Type"];
-            }
-            else
-            {
-                contentType = "application/json";
-            }
-            var content = BuildHttpContent(body, contentType);
-
+            var data = JsonConvert.SerializeObject(body);
+            HttpContent content = body is null ? null : new StringContent(data, Encoding.UTF8, "application/json");
             var response = await _httpClient.PostAsync(url, content);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }
 
-        public string PostString(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers, IDictionary<string, string> body)
+        public string PostString(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? headers,object body)
         {
             url = BuildUrlWithParameters(url, parameters);
             SetHeaders(headers);
-
-            string contentType;
-            if (headers is not null && headers["Content-Type"] != null)
-            {
-                contentType = headers["Content-Type"];
-            }
-            else
-            {
-                contentType = "application/json";
-            }
-            var content = BuildHttpContent(body, contentType);
+            var data = JsonConvert.SerializeObject(body);
+            HttpContent content = body is null ? null : new StringContent(data, Encoding.UTF8, "application/json");
             var response = _httpClient.PostAsync(url, content).Result;
             response.EnsureSuccessStatusCode();
             return response.Content.ReadAsStringAsync().Result;
         }
-
-
         #endregion
     }
 }

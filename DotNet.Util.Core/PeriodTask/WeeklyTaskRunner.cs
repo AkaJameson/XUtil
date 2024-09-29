@@ -1,31 +1,33 @@
 ﻿namespace Xin.DotnetUtil.PeriodTask
 {
-    public class DailyTaskRunner:IPeriodTask
+    public class WeeklyTaskRunner : IPeriodTask
     {
         private readonly Func<Task> _taskToRun;
-        private readonly TimeSpan _dailyRunTime;
+        private readonly DayOfWeek[] _daysOfWeekToRun; // 运行任务的星期几数组
+        private readonly TimeSpan _dailyRunTime;       // 运行任务的时间
         private CancellationTokenSource _cancellationTokenSource;
         private Task _runningTask;
 
-        public DailyTaskRunner(Func<Task> taskToRun, TimeSpan dailyRunTime)
+        public WeeklyTaskRunner(Func<Task> taskToRun, DayOfWeek[] daysOfWeekToRun, TimeSpan dailyRunTime)
         {
             _taskToRun = taskToRun ?? throw new ArgumentNullException(nameof(taskToRun));
+            _daysOfWeekToRun = daysOfWeekToRun ?? throw new ArgumentNullException(nameof(daysOfWeekToRun));
             _dailyRunTime = dailyRunTime;
             _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public DailyTaskRunner Start()
+        public WeeklyTaskRunner Start()
         {
             if (_runningTask != null)
             {
                 throw new InvalidOperationException("已经运行.");
             }
 
-            _runningTask = RunDailyTaskAsync(_cancellationTokenSource.Token);
+            _runningTask = RunWeeklyTaskAsync(_cancellationTokenSource.Token);
             return this;
         }
 
-        public DailyTaskRunner Stop()
+        public WeeklyTaskRunner Stop()
         {
             if (_cancellationTokenSource != null)
             {
@@ -35,7 +37,7 @@
             return this;
         }
 
-        private async Task RunDailyTaskAsync(CancellationToken cancellationToken)
+        private async Task RunWeeklyTaskAsync(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -43,8 +45,8 @@
                 {
                     var nextRunDelay = GetNextRunDelay();
                     Console.WriteLine($"下次运行时间: {nextRunDelay}");
+                    await Task.Delay(nextRunDelay, cancellationToken); // 等待下一次运行时间到来
                     await _taskToRun();
-                    await Task.Delay(nextRunDelay, cancellationToken);
                 }
                 catch (TaskCanceledException)
                 {
@@ -59,19 +61,30 @@
 
         private TimeSpan GetNextRunDelay()
         {
-            // Get current time
             var now = DateTime.Now;
 
-            // Calculate the next run time
             var nextRunTime = new DateTime(now.Year, now.Month, now.Day,
                                            _dailyRunTime.Hours, _dailyRunTime.Minutes, _dailyRunTime.Seconds);
+            int daysUntilNextRun = 7;
 
-            if (now > nextRunTime)
+            foreach (var dayOfWeek in _daysOfWeekToRun)
             {
-                nextRunTime = nextRunTime.AddDays(1);
+                int daysUntilDay = ((int)dayOfWeek - (int)now.DayOfWeek + 7) % 7;
+
+                if (daysUntilDay == 0 && now.TimeOfDay > _dailyRunTime)
+                {
+                    daysUntilDay += 7;
+                }
+
+                if (daysUntilDay < daysUntilNextRun)
+                {
+                    daysUntilNextRun = daysUntilDay;
+                    nextRunTime = nextRunTime.AddDays(daysUntilNextRun);
+                }
             }
 
             return nextRunTime - now;
         }
     }
+
 }

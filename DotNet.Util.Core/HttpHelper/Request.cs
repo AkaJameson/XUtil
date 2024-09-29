@@ -1,7 +1,7 @@
-﻿using DotNet.Util.Core.Extension;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Net;
 using System.Text;
+using Xin.DotnetUtil.Extension;
 
 namespace Xin.DotnetUtil.HttpHelper
 {

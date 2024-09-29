@@ -1,6 +1,4 @@
-﻿using DotNet.Util.Core.PeriodTask;
-
-namespace Xin.DotnetUtil.PeriodTask
+﻿namespace Xin.DotnetUtil.PeriodTask
 {
     public class DailyTaskRunner:IPeriodTask
     {

@@ -361,3 +361,5 @@ FodyWeavers.xsd
 #Extension
 ConsoleApp/
 /ConsoleApp1
+/Client
+/Server

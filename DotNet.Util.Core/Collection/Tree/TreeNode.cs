@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Xin.DotnetUtil.Collection
+namespace DotNet.Util.Core.Collection.Tree
 {
 
     public class TreeNode<T> : ITreeNode<T>, ITreeRoot<T> where T : struct
@@ -11,7 +11,7 @@ namespace Xin.DotnetUtil.Collection
 
         public TreeNode(T value)
         {
-            this.Value = value;
+            Value = value;
             Children = new List<ITreeNode<T>>();
         }
 
@@ -52,7 +52,7 @@ namespace Xin.DotnetUtil.Collection
                 if (treeNode == null) throw new Exception("当前节点中不包含这个子节点");
                 Children.Remove(treeNode);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

@@ -1,6 +1,6 @@
-﻿namespace Xin.DotnetUtil.Collection
+﻿namespace DotNet.Util.Core.Collection.Tree
 {
-    public interface ITree<T>: IEnumerable<T> where T : struct
+    public interface ITree<T> : IEnumerable<T> where T : struct
     {
         T Value { get; set; }
 
@@ -17,13 +17,13 @@
         public void FindChildDFSPostOrder(T value, out List<T> findPath);
 
     }
-    public interface ITreeNode<T>:ITree<T> where T:struct
+    public interface ITreeNode<T> : ITree<T> where T : struct
     {
         public ITree<T> parent { get; set; }
 
     }
 
-    public interface ITreeRoot<T>: ITree<T> where T : struct
+    public interface ITreeRoot<T> : ITree<T> where T : struct
     {
 
     }

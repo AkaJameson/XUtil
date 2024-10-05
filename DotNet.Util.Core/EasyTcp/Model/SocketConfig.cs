@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotNet.Util.Core.EasyTcp.Model
+namespace XUtil.Core.EasyTcp.Model
 {
     public class SocketConfig
     {

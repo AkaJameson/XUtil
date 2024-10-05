@@ -1,4 +1,4 @@
-﻿namespace DotNet.Util.Core.Collection.Tree
+﻿namespace XUtil.Core.Collection.Tree
 {
     public class TreeFactory
     {

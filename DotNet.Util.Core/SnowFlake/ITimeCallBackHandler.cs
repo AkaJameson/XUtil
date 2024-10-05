@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.SnowFlake
+﻿namespace XUtil.Core.SnowFlake
 {
     /// <summary>
     /// Created by Xinjingjue

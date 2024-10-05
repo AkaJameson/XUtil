@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace DotNet.Util.Core.EasyTcp.Model
+namespace XUtil.Core.EasyTcp.Model
 {
     public class TCPClientModel
     {

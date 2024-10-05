@@ -1,7 +1,7 @@
 ﻿using System.Net.NetworkInformation;
 using System.Net;
 using System.Net.Sockets;
-namespace Xin.DotnetUtil.SysInfo
+namespace XUtil.Core.SysInfo
 {
     public class NetInfo
     {

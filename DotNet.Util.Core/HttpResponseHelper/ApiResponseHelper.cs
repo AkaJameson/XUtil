@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.HttpResponseHelper
+﻿namespace XUtil.Core.HttpResponseHelper
 {
     public class ApiResponseHelper
     {

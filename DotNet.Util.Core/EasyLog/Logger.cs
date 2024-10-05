@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.Log
+﻿namespace XUtil.Core.Log
 {
     internal class Logger : ILogger
     {

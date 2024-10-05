@@ -1,10 +1,10 @@
-﻿using DotNet.Util.Core.IniParser;
+﻿using XUtil.Core.IniParser;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Xml;
 
-namespace Xin.DotnetUtil.IniParser
+namespace XUtil.Core.IniParser
 {
     /// <summary>
     /// ini文件解析器

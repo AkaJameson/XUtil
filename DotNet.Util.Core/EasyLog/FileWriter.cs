@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace Xin.DotnetUtil.Log
+namespace XUtil.Core.Log
 {
     internal class FileWriter
     {

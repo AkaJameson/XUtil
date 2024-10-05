@@ -1,10 +1,10 @@
-﻿using DotNet.Util.Core.EasyTcp.Model;
-using DotNet.Util.Core.EasyTcp.Tool;
+﻿using XUtil.Core.EasyTcp.Model;
+using XUtil.Core.EasyTcp.Tool;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace DotNet.Util.Core.EasyTcp
+namespace XUtil.Core.EasyTcp
 {
     public class TCPClientBase : IClientToolKit
     {

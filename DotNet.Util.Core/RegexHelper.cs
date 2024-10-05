@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Xin.DotnetUtil
+namespace XUtil.Core
 {
     public class RegexHelper
     {

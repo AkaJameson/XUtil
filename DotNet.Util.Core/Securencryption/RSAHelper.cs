@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Xin.DotnetUtil.Securencryption
+namespace XUtil.Core.Securencryption
 {
     /// <summary>
     /// 包含 RSA 加密、解密、签名和验证功能

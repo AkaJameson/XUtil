@@ -1,5 +1,5 @@
 ﻿using System.Net.Sockets;
-namespace DotNet.Util.Core.EasyTcp
+namespace XUtil.Core.EasyTcp
 {
     /// <summary>
     /// 线程安全的访问流

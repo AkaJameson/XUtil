@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Xin.DotnetUtil.Log
+namespace XUtil.Core.Log
 {
     public static class LogFactory
     { 

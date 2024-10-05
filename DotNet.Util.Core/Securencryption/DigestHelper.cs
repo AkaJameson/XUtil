@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Xin.DotnetUtil.Securencryption
+namespace XUtil.Core.Securencryption
 {
     /// <summary>
     /// 摘要加密工具类，包括MD5、SHA256和SHA512加密及校验方法。

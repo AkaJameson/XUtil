@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace Xin.DotnetUtil.Export
+namespace XUtil.Core.Export
 {
     /// <summary>
     /// 多线程下载器支持断点续传和进度保存

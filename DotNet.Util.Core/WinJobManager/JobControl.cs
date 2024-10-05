@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace Xin.DotnetUtil.JobManager
+namespace XUtil.Core.JobManager
 {
     #region Helper classes
     /// <summary>

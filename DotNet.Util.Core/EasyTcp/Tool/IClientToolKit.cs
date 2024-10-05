@@ -1,6 +1,5 @@
-﻿using DotNet.Util.Core.EasyTcp.Model;
-
-namespace DotNet.Util.Core.EasyTcp.Tool
+﻿using XUtil.Core.EasyTcp.Model;
+namespace XUtil.Core.EasyTcp.Tool
 {
     public interface IClientToolKit
     {

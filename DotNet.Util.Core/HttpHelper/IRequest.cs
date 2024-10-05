@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.HttpHelper
+﻿namespace XUtil.Core.HttpHelper
 {
     public interface IRequest
     {

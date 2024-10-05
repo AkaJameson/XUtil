@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using System.Net;
 using System.Text;
-using Xin.DotnetUtil.Extension;
+using XUtil.Core.Extension;
 
-namespace Xin.DotnetUtil.HttpHelper
+namespace XUtil.Core.HttpHelper
 {
     internal class Request:IRequest
     {

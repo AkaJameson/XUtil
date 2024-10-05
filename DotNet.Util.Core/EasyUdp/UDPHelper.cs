@@ -1,7 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Net;
 
-namespace DotNet.Util.Core.EasyUdp
+namespace XUtil.Core.EasyUdp
 {
     public class UDPHelper
     {

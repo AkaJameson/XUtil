@@ -1,6 +1,5 @@
 ﻿using System.Collections;
-
-namespace DotNet.Util.Core.Collection.Tree
+namespace XUtil.Core.Collection.Tree
 {
 
     public class TreeNode<T> : ITreeNode<T>, ITreeRoot<T> where T : struct

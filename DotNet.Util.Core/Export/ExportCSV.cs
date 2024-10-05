@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Text;
 
-namespace Xin.DotnetUtil.Export
+namespace XUtil.Core.Export
 {
     public class ExportCSV
     {

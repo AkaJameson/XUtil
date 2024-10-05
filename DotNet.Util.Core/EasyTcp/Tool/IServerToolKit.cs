@@ -4,9 +4,9 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using DotNet.Util.Core.EasyTcp.Model;
+using XUtil.Core.EasyTcp.Model;
 
-namespace DotNet.Util.Core.EasyTcp.Tool
+namespace XUtil.Core.EasyTcp.Tool
 {
     public interface IServerToolKit
     {

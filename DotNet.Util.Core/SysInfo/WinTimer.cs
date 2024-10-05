@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace Xin.DotnetUtil.SysInfo
+namespace XUtil.Core.SysInfo
 {
     /// <summary>
     /// 仅适用于windows,纯计时器

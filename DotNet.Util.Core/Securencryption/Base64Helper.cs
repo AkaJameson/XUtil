@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Xin.DotnetUtil.Securencryption
+namespace XUtil.Core.Securencryption
 {
     public class Base64Helper
     {

@@ -1,4 +1,4 @@
-﻿namespace DotNet.Util.Core.IniParser
+﻿namespace XUtil.Core.IniParser
 {
     public interface IReadOnlyKeyValuePairs
     {

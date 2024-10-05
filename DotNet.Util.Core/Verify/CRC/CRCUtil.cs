@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.Verify.CRC
+﻿namespace XUtil.Core.Verify.CRC
 {
     /// <summary>
     /// CRC校验工具

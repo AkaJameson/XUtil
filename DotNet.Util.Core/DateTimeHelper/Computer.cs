@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.DateTimeHelper
+﻿namespace XUtil.Core.DateTimeHelper
 {
     public class TimeComputer
     {

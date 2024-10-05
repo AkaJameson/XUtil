@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Management;
 using System.Runtime.InteropServices;
-namespace Xin.DotnetUtil.SysInfo
+namespace XUtil.Core.SysInfo
 {
     public class SystemInfo
     {

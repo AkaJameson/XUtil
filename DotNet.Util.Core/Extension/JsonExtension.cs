@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-namespace Xin.DotnetUtil.Extension
+namespace XUtil.Core.Extension
 {
     public static class JsonExtension
     {

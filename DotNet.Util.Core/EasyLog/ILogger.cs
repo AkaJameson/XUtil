@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.Log
+﻿namespace XUtil.Core.Log
 {
     public interface ILogger
     {

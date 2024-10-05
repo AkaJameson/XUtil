@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.Verify
+﻿namespace XUtil.Core.Verify
 {
     public class SimpleVerify
     {

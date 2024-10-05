@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace Xin.DotnetUtil.Securencryption
+namespace XUtil.Core.Securencryption
 {
     /// <summary>
     /// 高级加密标准(AES,Advanced Encryption Standard)为最常见的对称加密算法

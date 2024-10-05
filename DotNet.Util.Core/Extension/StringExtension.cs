@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.Extension
+﻿namespace XUtil.Core.Extension
 {
     public static class StringExtension
     {

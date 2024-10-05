@@ -1,4 +1,4 @@
-﻿namespace Xin.DotnetUtil.PeriodTask
+﻿namespace XUtil.Core.PeriodTask
 {
     public class DailyTaskRunner:IPeriodTask
     {

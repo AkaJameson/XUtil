@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 
-namespace DotNet.Util.Core.IniParser
+namespace XUtil.Core.IniParser
 {
     public class ReadOnlyKeyValuePairs : IReadOnlyKeyValuePairs
     {

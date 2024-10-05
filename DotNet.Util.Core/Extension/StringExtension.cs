@@ -48,8 +48,9 @@
             }
         }
 
-        public static bool IsNull(this string value) => string.IsNullOrWhiteSpace(value);  
+        public static bool IsNotNull(this string value) => !string.IsNullOrWhiteSpace(value);  
         
+
 
     }
 }

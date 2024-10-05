@@ -4,9 +4,11 @@
     <TargetFrameworks>net8.0;net6.0;</TargetFrameworks>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>annotations</Nullable>
-    <BaseOutputPath>../DotNet.Util.Dllfile</BaseOutputPath>
+    <BaseOutputPath>../XUtil.Dllfile</BaseOutputPath>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <Authors>xinjingjue</Authors>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/AkaJameson/XUtil</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net8.0|AnyCPU'">
@@ -39,6 +41,13 @@
     <Compile Remove="bin\**" />
     <EmbeddedResource Remove="bin\**" />
     <None Remove="bin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

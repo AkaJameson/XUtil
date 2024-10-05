@@ -1,25 +1,29 @@
 ﻿using DotNet.Util.Core.IniParser;
 using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Xml;
 
 namespace Xin.DotnetUtil.IniParser
 {
     /// <summary>
-    /// 默认支持Utf-8  目前只是个玩具
+    /// ini文件解析器
     /// </summary>
     public class IniFile
     {
         private string filePath;
         private ConcurrentDictionary<string, ConcurrentDictionary<string, string>> iniDictonary;
         private LinkedList<string> iniList;
+        private Encoding fileEncoding;
         private static object _lock = new object();
         private bool isEdit = false;
         private bool isLoad = false;
-        public IniFile(string filePath)
+        public IniFile(string filePath,Encoding encoding)
         {
             iniDictonary = new();
+            iniList = new LinkedList<string>();
             this.filePath = filePath;
+            fileEncoding = encoding;
             LoadIni();
         }
 
@@ -37,7 +41,7 @@ namespace Xin.DotnetUtil.IniParser
             {
                 throw new Exception("这个文件不是ini配置文件");
             }
-            var alllines = File.ReadAllLines(filePath);
+            var alllines = File.ReadAllLines(filePath,fileEncoding);
             foreach(var t in alllines)
             {
                 iniList.AddLast(t);
@@ -159,24 +163,30 @@ namespace Xin.DotnetUtil.IniParser
                 iniDictonary[section][key] = value;
                 lock (_lock)
                 {
-                    var sectionNode = iniList.Find(section);
+                    var sectionNode = iniList.Find($"[{section}]");
+                    bool keyHasFound = false;
                     if (sectionNode != null)
                     {
                         var currentNode = sectionNode.Next;
-                        bool keyFound = false;
                         while (currentNode != null && !currentNode.Value.StartsWith("["))
                         {
-                            if (currentNode.Value.StartsWith($"{key}="))
+                            string[] keyValue = currentNode.Value.Split(new[] { '=' }, 2);
+                            if (keyValue.Length == 2 && keyValue[0].Trim() == key)
                             {
-                                currentNode.Value = $"{key}={value}";
-                                keyFound = true;
+                                // 如果找到相同的键，更新其值
+                                currentNode.Value = $"{key} = {value}";
+                                keyHasFound = true;
                                 break;
                             }
                             currentNode = currentNode.Next;
                         }
-                        if (!keyFound)
+                        if (!keyHasFound && currentNode == null)
                         {
-                            iniList.AddAfter(sectionNode, $"{key}={value}");
+                            iniList.AddLast($"{key} = {value}");
+                        }
+                        else if(!keyHasFound && currentNode.Value.StartsWith("["))
+                        {
+                            currentNode.Previous.Value = $"{key} = {value}";
                         }
                     }
                 }
@@ -205,7 +215,7 @@ namespace Xin.DotnetUtil.IniParser
             {
                 if (isEdit)
                 {
-                    File.WriteAllLines(filePath, iniList.ToArray());
+                    File.WriteAllLines(filePath, iniList.ToArray(),fileEncoding);
                     isEdit = false;
                 }
             }
@@ -221,7 +231,7 @@ namespace Xin.DotnetUtil.IniParser
             {
                 iniDictonary.Clear();
                 iniList.Clear();
-                var alllines = File.ReadAllLines(filePath);
+                var alllines = File.ReadAllLines(filePath,fileEncoding);
                 foreach (var t in alllines)
                 {
                     iniList.AddLast(t);

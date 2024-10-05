@@ -29,7 +29,7 @@ namespace DotNet.Util.Core.EasyUdp
         /// 单独接收消息
         /// </summary>
         /// <returns></returns>
-        public async Task<byte[]> ReceiveAsync(out IPEndPoint iPEndPoint)
+        public async Task<byte[]> ReceiveAsync(IPEndPoint iPEndPoint)
         {
             IPEndPoint localEndPoint = new IPEndPoint(IPAddress.Any, 0);
             var data = await udpClient.ReceiveAsync();

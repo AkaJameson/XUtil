@@ -231,7 +231,7 @@ namespace XUtil.Core.EasyTcp
             }
         }
 
-        private void Start()
+        public void Start()
         {
             try
             {
@@ -260,7 +260,7 @@ namespace XUtil.Core.EasyTcp
         }
         #region ToolKit实现
         /// <summary>
-        /// 单点发送消息
+        /// 单点发送消息,线程安全
         /// </summary>
         /// <param name="msg"></param>
         /// <param name="Ipaddress"></param>

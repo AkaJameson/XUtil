@@ -1,5 +1,93 @@
 ## DotNetUtil
 
+### EasyTCP
+
+TCP 服务端和客户端封装。
+
+解决TCP底层粘包，双端提供保活，客户端断线重连。
+
+TcpServer
+
+```c#
+//创建及启动
+TCPServer server = new TCPServer(new XUtil.Core.EasyTcp.Model.SocketConfig());
+//停止监听，清理server维护client列表
+server.Stop();
+//重新启动
+server.Start();
+//获取服务端工具包
+var toolkit = server.GetServerToolkit();
+//单点发送消息
+toolkit.SendMsg(byte[] msg, string Ipaddress);
+//广播
+tookit.Boradcast(List<byte[] msg>)
+//获取Client模型
+toolkit.GetClientModel(string Ipaddress)；
+//添加监听到数据处理方法 byte[]:数据,string:RemoteIpAddress
+toolkit.AddMessageHandler(Action<byte[], string> handler)
+```
+
+TCPClientBase
+
+```c#
+//创建及启动
+TCPClientBase client = new  TCPClientBase(IPEndPoint iPEndPoint, List<Action<byte[]>> msgHandler = null);
+//获取工具包
+var toolkit = server.GetClientToolKit();
+//工具包提供方法
+//发送消息
+ Task SendMsg(byte[] msg);
+//获取模型
+ TCPClientModel GetTcpClient();
+//添加消息处理
+void AddMessageHandler(Action<byte[]> handler);
+```
+
+### EasyUDP
+
+//As Server
+
+```c#
+class Program
+{
+    static void Main(string[] args)
+    {
+        UdpHelper udpServer = new UdpHelper(8080); // 监听本地8080端口
+        udpServer.StartListeningAsync((message, endPoint) =>
+        {
+            //todo
+        });
+
+        Console.WriteLine("UDP Server is listening on port 8080...");
+        Console.ReadLine();
+
+        udpServer.Close(); // 停止服务器
+    }
+}
+
+```
+
+// As Client
+
+```c#
+class Program
+{
+    static void Main(string[] args)
+    {
+        UdpHelper udpClient = new UdpHelper("127.0.0.1", 8080); // 连接到服务器127.0.0.1的8080端口
+        udpClient.Send("Hello, Server!");
+ 	    udpClient.StartListeningAsync((message, endPoint) =>
+        {
+            //todo
+        });
+        Console.WriteLine("Message sent to server.");
+        udpClient.Close(); // 关闭客户端
+    }
+}
+```
+
+
+
 ### SnowFlake（雪花算法）
 
 为了解决Guid 128位过长占据数据库的存储空间，并且无法再分布式系统中使用的原因。
@@ -7,7 +95,7 @@
 使用c#重写了Twitter的雪花算法,线程安全，并且适合于分布式系统的使用（正确设置工区Id和作业Id）
 
 ```c#
-using Xin.DotnetUtil.SnowFlake
+using XUtil.Core.SnowFlake
     
 SnowflakeIdGenerator generator = new SnowflakeIdGenerator(workerId,datacenterId,timeCallBackHandler);
 string id = generator.nextId();
@@ -22,7 +110,7 @@ string id = generator.nextId();
   通常可以定义一个全局静态变量使用
 
 ```c#
-using  Xin.DotnetUtil.JobManager
+using  XUtil.Core.JobManager
 
 Job job = new Job();
 job.AddProcess(xxxx);
@@ -30,7 +118,7 @@ job.AddProcess(xxxx);
 
 //环境变量清理功能：实现对主机变量名为Path的内容清理
     /// 1.清除所有无效路径
-    /// 2.清除路径文件夹中包含包含某文件（在代码中修改，没有提供修改方法 ）"HHTech.CSM2018.Starter.exe"或"HHTech.CSM2018.Client.exe"
+    /// 2.清除路径文件夹中包含包含某文件
     /// 3.重写path的系统环境变量
 EnviornmentCleanr cleaner = new EnviornmentCleanr();
 cleaner.ResetkeyPathInEnvironment();
@@ -43,7 +131,7 @@ cleaner.ResetkeyPathInEnvironment();
 不依赖于高耦合的delegate和Event,实现了一个线程安全类型的事件总线形式。
 
 ```c#
-using  Xin.DotnetUtil.EventBus
+using  XUtil.Core.EventBus
 
 //组件已经实现了自动注册功能
 //发布，及触发
@@ -55,69 +143,35 @@ EventBus.Default.UnSubscribe();
 ```
 
 ### EasyLog（简单日志）
-一个跨平台的轻量化的简单Log日志，需要创建LogConfig.json。
+一个轻量化的日志系统，支持多线程。
 
 ```c#
-using Xin.DotnetUtil.EasyLog
-//json格式
-{
-  "LogFileName": "MYlOG",
-  "SuccessLogName": "SuccessLog",
-  "ErrorLogName": "ErrorLog",
-  "ExpectionLogName": "ExpectionLog",
-  "WarningLogName": "WarningLog",
-  "SuccessSaveDays": 10,
-  "ErrorSaveDays": 20,
-  "ExpectionSaveDays": 20,
-  "WarningSaveDays": 20
-
-}
-/*
-* 解释说明：LogFileName：根文件下的Log文件夹
-* "Success|Error|Expection|Warning LogName":成功，错误，异常，警告，四种日志文件的名字（不需* * 要后缀名）
-* SaveDays：日志会根据设置进行刷新，以日为单位进行刷新
-*/
-
-使用
- static void Main(string[] args)
- {
- 	// 可以使用绝对路径，也可以使用相对路径，使用相对路径，将LogConfig.json属性设置如果较新则复制
-     LogSaver saver = new LogSaver("./LogConfig.json");
-     saver.LogWarning("This is a warning log");
-     saver.LogWarningAsync("This is a warning log");
- }
+using XUtil.Core.Log
+    //首先创建LogConfig 提供默认属性
+    var logConfig = new LogConfig();
+	//使用工厂创建单例
+	var logger = LogFactory.CreateLogger(logConfig);
+	logger.Info(msg);
+	logger.warn(msg);
+	log.Error(msg);
 ```
 
 ### IniParser（ini解析器）
-Ini文件解析器，提供Ini文件解析，添加，修改等功能。
+线程安全的ini解析修改器，支持 # ；开头注释
 
 ```c#
-using Xin.DotnetUtil.IniFile
-IniFile iniFile = new IniFile(path);
-//读取指定得Value
-iniFile.ReadValue(section,key);
-//读取KeyValuePairs
-iniFile.ReadKeyValuePairsInSection(section);
-//修改节点名字
-iniFile.EditSection(oldSection, newSection);
-//修改节点下key名字
-iniFile.EditKey(Section,oldKey,newKey);
-//修改节点下对应Key得Value名字
-iniFile.EditValue(section,key,value);
-//添加keyValue
-iniFile.AddKeyValueInSection("xxxx", "xxxx", "xxxx");
-//添加节点
-iniFile.AddSection("pilipala");
-//重新加载
-iniFile.Reload();
-//保存 会覆盖源文件，导致注释消失
-iniFile.Save();
-
-//支持Idispose释放资源
-using(IniFile inif = new IniFile(Path))
-{
-    //ToDo
-}
+using XUtil.Core.IniParser
+    //创建IniFile
+    var iniFile = new IniFile(filePath,encoding);
+	string ReadValue(string section,string key);
+	string ReadValue(string sec_key);
+    IReadOnlyKeyValuePairs ReadKeyValuePairsInSection(string section);
+	//此方法支持添加修改，不支持删除配置。
+    void AddKeyValueInSection(string section,string key,string value);
+	void AddKeyValueInSection(string sec_key_value);
+	IniFile Save();
+	//Save后需要调用Reload进行重新加载；
+ 	void Reload();
 ```
 
 ### SysInfo（系统信息）
@@ -125,7 +179,7 @@ using(IniFile inif = new IniFile(Path))
 **SystemInfo和Wintimer仅Windows平台可用**（**跨平台时间计数器可以选择使用NetCore自带StopWatch**）：
 
 ```c#
-using Xin.DotnetUtil.SysInfo
+using XUtil.Core.SysInfo
 
 //纳秒级计时器WinTimer，可以这么写
  WinTimer winTimer = new WinTimer();
@@ -147,7 +201,7 @@ using(WinTimer timer = WinTimer.Create())
 
 ```c#
 
-using Xin.DotnetUtil.SysInfo
+using XUtil.Core.SysInfo
 //静态类SystemInfo，获取硬件信息（无第三方依赖，仅能使用在windows平台）
  //获取CPU序列号
  public static string GetCpuID();
@@ -176,7 +230,7 @@ using Xin.DotnetUtil.SysInfo
 ```
 
 ```c#
-using Xin.DotnetUtil.SysInfo
+using XUtil.Core.SysInfo
 //静态类NetInfo
 Task<string> GetPublicIPAsync();
 //获取网关和子网掩码
@@ -187,25 +241,12 @@ List<string> ScanLocalNetwork(string subnet, int timeout = 1000);
 string GetSubnet();
 ```
 
-```c#
- 
-using Xin.DotnetUtil.SysInfo
-// 定时任务池，定时执行任务
- //MyScheduleTest继承ITaskTriggerHaneler实现Occour方法
- //循环任务
- ScheduleTasksPool.SetScheduleTask("helloworld", new MyScheduleTest(), true, 5);
- ScheduleTasksPool.ActiveTask("helloworld");
- //单次执行
-  ScheduleTasksPool.SetScheduleTask("helloworld2", new MyScheduleTest2(), false, 1);
-  ScheduleTasksPool.ActiveTask("helloworld2");
-```
-
 ### Securencryption（加解密）
 
-提供AES Base64 DES RSA MD5的加解密验证帮助静态类。
+提供AES Base64 DES RSA MD5,Sha256 sha512的加解密验证帮助静态类。
 
 ```c#
-using Xin.DotnetUtil.Securecryption
+using XUtil.Core.Securecryption
 //MD5Helper
  string ComputeMd5Hash(string input);//一次加严
  ComputeDoubleMd5Hash(string input);// 二次加严
@@ -246,7 +287,7 @@ bool VerifyData(string message, string signature, string publicKey)//使用RSA�
 ### Export（导出）
 
 ```c#
-Xin.DotnetUtil.Export
+XUtil.Core.Export
 //静态类ExportCSV  DATATABLE导出CSV
 void ExportToCSV(DataTable dt,string fullpathName);
 //CSV导入DataTable
@@ -275,7 +316,7 @@ Action OnDownloadStartHandler;
 ### DateTimerHelper(时间计算帮助类)
 
 ```c#
-using Xin.DotnetUtil.DateTimeHelper
+using XUtil.Core.DateTimeHelper
 //时间差
 double DiffMilliSecond(DateTime start, DateTime end)
 double DiffSecound(DateTime start, DateTime end)
@@ -304,7 +345,7 @@ double diffYear(DateTime start, DateTime end)
 提供树形结构创建和BFS先中后序路径查询（非常规BFS，BFS最短路径）和DFS遍历。
 
 ```c#
-using Xin.DotnetUtil.Collection
+using XUtil.Core.Collection
 //工厂类创建
  ITreeRoot<MyStruct> treeRoot = TreeFactory.CreateRoot(new MyStruct("root"));
  //构造方法创建
@@ -331,7 +372,7 @@ treeRoot.FindChildDFSPostOrder(node2.Value, out List<MyStruct> findPath);
 ### Verify(校验工具)
 
 ```c#
-using Xin.DotnetUtil.Verify
+using XUtil.Core.Verify
 //CRCUtil类
 /*
 	提供标准Crc校验功能
@@ -366,7 +407,7 @@ CRC_16_X25, CRC_16_XMODEM, CRC_A, CRC_32, CRC_32_BZIP2, CRC_32_JAMCRC, CRC_32_MP
 基于网上常见的实现。
 
 ```c#
-using Xin.DotnetUtil
+using XUtil.Core
 /// <summary>
 /// 获取已经匹配到的集合
 /// </summary>
@@ -392,33 +433,50 @@ public static MatchCollection FindMatches(string input, string pattern)
  // 密码，账号，数字，字符，网络等等 都在RegexHelper类中
 ```
 
+### HttpHelper
 
-
-### HttpRequest(HttpClient封装)
+httpClient封装
 
 ```c#
-using Xin.DotnetUtil
+using XUtil.Core
+    //创建全局单一持有的http对象请求
+    HttpCreateFactory.CreateInstanceRequest();
+	//创建请求对象
+	HttpCreateFactory.CreateRequest();
+//IRequest 方法
+ Task<T> GetAsync<T>(string url) where T:class;
 
-//一个HttpClient的封装
-//实现类似JS的动态接收数据，（只支持Application/json)其他的用的时候直接写吧，实现了Get Post方法（没人写标准的Http请求吧。。）
+ T Get<T> (string url) where T: class;
 
- using (var httpClientHelper = new HttpClientHelper())
-    {
- //example       httpClientHelper.AddDefaultRequestHeader("Authorization", "Bearer YOUR_TOKEN");
+Task<T> GetAsync<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header) where T : class;
 
-        var getResponse = await httpClientHelper.GetAsync("https://api.example.com/data");
-        if (getResponse.IsSuccess)
-        {
-            dynamic data = getResponse.Data;
-            Console.WriteLine($"Test1: {data.Test1}, Test2: {data.Test2}");
-        }
-        else
-        {
-            var errorMessage = getResponse.ErrorMessage;
-            Console.WriteLine($"Error: {errorMessage}");
-        }
-    }
+T Get<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header) where T : class;
 
+Task<string> GetStringAsync(string url);
+
+string GetString(string url);
+
+Task<string> GetStringAsync(string url,IDictionary<string,string>? parameters,IDictionary<string, string>? header);
+
+string GetString(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header);
+
+Task<T> PostAsync<T>(string url) where T : class;
+
+T Post<T>(string url) where T : class;
+
+Task<T> PostAsync<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header,object? body) where T : class;
+
+T Post<T>(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header,object? body) where T : class;
+
+Task<string> PostStringAsync(string url);
+
+string PostString(string url);
+
+Task<string> PostStringAsync(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header, object? body);
+
+string PostString(string url, IDictionary<string, string>? parameters, IDictionary<string, string>? header,object? body);
+
+public void SetBaseAddress(string baseAddress);
 ```
 
 
@@ -428,7 +486,7 @@ using Xin.DotnetUtil
 统一后端返回格式
 
 ```c#
-using Xin.DotnetUtil.HttpResponseHelper
+using XUtil.Core.HttpResponseHelper
  public class ApiResponse
  {
      public int Code { get; set; }
@@ -447,7 +505,5 @@ using Xin.DotnetUtil.HttpResponseHelper
  //分页使用
  static ApiResponse Success(dynamic data, int total)
  static ApiResponse Error(string msg)
- //不附加进程，在中间用看哪里报错，笨方法。。
- static ApiResponse Debug(string msg, dynamic data = null)
 ```
 

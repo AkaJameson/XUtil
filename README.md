@@ -507,3 +507,17 @@ using XUtil.Core.HttpResponseHelper
  static ApiResponse Error(string msg)
 ```
 
+### Extension
+
+```c#
+namespace XUtil.Core.Extension
+static T ConvertToObject<T>(this string content) where T : class
+static string ConvertTostring<T>(this T obj) where T: class
+    
+namespace XUtil.Core.Extension
+StringExtension
+bool TrySpilt(string content, char param, out string[] spilts);
+TValue StringParse<TValue>(this string value) where TValue : struct
+bool IsNotNull(this string value);
+```
+

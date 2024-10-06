@@ -521,3 +521,20 @@ TValue StringParse<TValue>(this string value) where TValue : struct
 bool IsNotNull(this string value);
 ```
 
+### 定时任务
+
+```c#
+//间隔时间执行
+IPeriodTask task = new PeriodicTaskRunner(Func<Task> tasktoRun,Timespan timeout);
+//每天定时执行
+IPeriodTask task = new DailyTaskRunner(Func<Task> taskToRun, TimeSpan dailyRunTime);
+//单天多次执行
+IPeriodTask task = new MutiDailyTaskRunner(Func<Task> taskToRun, TimeSpan dailyStartTime, TimeSpan executionInterval, int executionCountPerDay);
+//每周定时执行 
+//daysofWeekToRun : 每周哪些天运行任务
+//dailyStartTime  : 每天开始执行任务的时间
+//executionInterval : 执行任务的间隔
+//executionCountPerDay : 每天执行的次数
+IPeriodTask task = new MutiWeeklyTaskRunner(Func<Task> taskToRun, List<DayOfWeek> daysOfWeekToRun, TimeSpan dailyStartTime, TimeSpan executionInterval, int executionCountPerDay);
+```
+

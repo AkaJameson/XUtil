@@ -5,7 +5,11 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XUtil.Core", "XUtil.Core\XUtil.Core.csproj", "{DB8658C5-2B3B-4E9F-B0E8-29578A5C03F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{BAB9939E-6A58-4879-9B6D-A0A0F69BB0A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{BAB9939E-6A58-4879-9B6D-A0A0F69BB0A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUtil.Captcha", "XUtil.Captcha\XUtil.Captcha.csproj", "{14E67DDB-16A0-44C8-B125-CCE95BBF1413}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XUtil", "XUtil\XUtil.csproj", "{20809331-44D1-4AD0-B9BA-A17A397C6DFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{BAB9939E-6A58-4879-9B6D-A0A0F69BB0A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAB9939E-6A58-4879-9B6D-A0A0F69BB0A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAB9939E-6A58-4879-9B6D-A0A0F69BB0A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14E67DDB-16A0-44C8-B125-CCE95BBF1413}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14E67DDB-16A0-44C8-B125-CCE95BBF1413}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14E67DDB-16A0-44C8-B125-CCE95BBF1413}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14E67DDB-16A0-44C8-B125-CCE95BBF1413}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20809331-44D1-4AD0-B9BA-A17A397C6DFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20809331-44D1-4AD0-B9BA-A17A397C6DFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20809331-44D1-4AD0-B9BA-A17A397C6DFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20809331-44D1-4AD0-B9BA-A17A397C6DFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

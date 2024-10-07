@@ -538,3 +538,18 @@ IPeriodTask task = new MutiDailyTaskRunner(Func<Task> taskToRun, TimeSpan dailyS
 IPeriodTask task = new MutiWeeklyTaskRunner(Func<Task> taskToRun, List<DayOfWeek> daysOfWeekToRun, TimeSpan dailyStartTime, TimeSpan executionInterval, int executionCountPerDay);
 ```
 
+### 验证码（自用）
+
+```c#
+ICaptchaService captchaService = new CaptchaService();
+//生成验证码图片，5分钟过期
+var info = captchaService.GetCaptcha(5);
+//info返回一个元组，(Guid,byte[]),图片uid和图片字节流
+//验证码校验
+var verifyInfo = captchaService.Verify(Guid id,string tag)
+
+//接口使用 将byte[] 转base64 格式，传递
+//data:image/png;base64,{base64String}
+
+```
+

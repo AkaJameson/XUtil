@@ -2,5 +2,7 @@
 {
     public interface IPeriodTask
     {
+        void Start();
+        void Stop();
     }
 }

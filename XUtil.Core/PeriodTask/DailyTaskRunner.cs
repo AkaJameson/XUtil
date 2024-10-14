@@ -11,28 +11,27 @@
         {
             _taskToRun = taskToRun ?? throw new ArgumentNullException(nameof(taskToRun));
             _dailyRunTime = dailyRunTime;
-            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public DailyTaskRunner Start()
+        public void Start()
         {
             if (_runningTask != null)
             {
                 throw new InvalidOperationException("已经运行.");
             }
-
+            _cancellationTokenSource = new CancellationTokenSource();
             _runningTask = RunDailyTaskAsync(_cancellationTokenSource.Token);
-            return this;
+            return;
         }
 
-        public DailyTaskRunner Stop()
+        public void Stop()
         {
             if (_cancellationTokenSource != null)
             {
                 _cancellationTokenSource.Cancel();
                 _runningTask = null;
             }
-            return this;
+            return;
         }
 
         private async Task RunDailyTaskAsync(CancellationToken cancellationToken)

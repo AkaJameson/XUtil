@@ -7,7 +7,6 @@
         private LogConfig config;
         private static bool isInit = false;
         public bool isStart = false;
-
         Logger(LogConfig logConfig)
         {
             config = logConfig;
@@ -26,14 +25,11 @@
             isInit = true;
             return instance.Value;
         }
-        public static void SetLoggerInstance(LogConfig config)
-        {
-            if(instance == null)
-            {
-                instance = new Lazy<Logger>(() => new Logger(config));
-                isInit = true;
-            }
-        }
+        /// <summary>
+        /// 获取instance实例
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public static Logger GetLoggerInstance()
         {
             if (isInit)
@@ -46,7 +42,6 @@
             if (isStart)
                 WriteLog(LogLevel.Info, message);
         }
-
         public void Warn(string message)
         {
             if (isStart)
@@ -64,16 +59,15 @@
             Writer.SetQueue(logmessage);
         }
 
-        public void LoggerStart()
+        public void StartLogger()
         {
             if(Writer == null)
             {
                 Writer = new FileWriter(config);
-                Writer.Start();
                 isStart = true;
             }
         }
-        public async void LoggerStop()
+        public async void StopLogger()
         {
             Writer = null;
             isStart = false;

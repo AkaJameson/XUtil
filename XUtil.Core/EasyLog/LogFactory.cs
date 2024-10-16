@@ -8,73 +8,33 @@ namespace XUtil.Core.Log
 
         public static ILogger CreateLogger(LogConfig logConfig)
         {
-            try
+            lock (locker)
             {
-                lock (locker)
-                {
-                    var logger = Logger.GetLoggerInstance(logConfig);
-                    logger.LoggerStart();
-                    return logger;
-                }
-            }
-            catch(Exception ex)
-            {
-                throw ex;
+                var logger = Logger.GetLoggerInstance(logConfig);
+                logger.StartLogger();
+                return logger;
             }
         }
-        public static ILogger CreateLogger()
+        public static ILogger GetLogger()
         {
-            try
+            lock (locker)
             {
-                lock (locker)
-                {
-                    var logger = Logger.GetLoggerInstance();
-                    return logger;
-                }
-            }
-            catch(Exception e)
-            {
-                throw e;
-            }
-            
-        }
-        public static void SetLogger(LogConfig logConfig)
-        {
-            try
-            {
-                lock (locker)
-                {
-                    Logger.SetLoggerInstance(logConfig);
-                }
-            }
-            catch(Exception e)
-            {
-                throw e;
+                return Logger.GetLoggerInstance();
             }
         }
-        public static void StopLogger(ILogger logger)
+        /// <summary>
+        /// 卸载
+        /// </summary>
+        /// <param name="logger"></param>
+        public static void Unload(ILogger logger)
         {
             lock (locker)
             {
                 if (logger != null)
                 {
-                    Logger log = (Logger)logger;
-                    log.LoggerStop();
+                    ((Logger)logger).StopLogger();
                 }
             }
         }
-
-        public static void StartLogger(ILogger logger)
-        {
-            lock (locker)
-            {
-                if (logger != null)
-                {
-                    Logger log = (Logger)logger;
-                    log.LoggerStop();
-                }
-            }
-        }
-
     }
 }

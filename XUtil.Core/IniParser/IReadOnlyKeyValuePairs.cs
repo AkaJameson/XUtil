@@ -1,10 +1,7 @@
 ﻿namespace XUtil.Core.IniParser
 {
-    public interface IReadOnlyKeyValuePairs
+    public interface IReadOnlyKeyValuePairs : IReadOnlyDictionary<string, string>
     {
-        string this[string key] { get; }    
 
-        IEnumerable<string> Keys { get; }
-        IEnumerable<string> Values { get; }
     }
 }

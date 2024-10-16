@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Linq.Expressions;
 using System.Text;
 
 namespace XUtil.Core.IniParser
@@ -218,6 +219,12 @@ namespace XUtil.Core.IniParser
             }
             return this;
         }
+
+        public IEnumerable<IReadOnlyKeyValuePairs> FindSection(Func<string,bool> predicate)
+        {
+            var matchingSections = iniDictonary.Keys.Where(predicate).ToList();
+            return matchingSections.Select(section => ReadKeyValuePairsInSection(section));
+        }
         /// <summary>
         /// 重新加载
         /// </summary>
@@ -228,38 +235,12 @@ namespace XUtil.Core.IniParser
             {
                 iniDictonary.Clear();
                 iniList.Clear();
-                var alllines = File.ReadAllLines(filePath,fileEncoding);
-                foreach (var t in alllines)
-                {
-                    iniList.AddLast(t);
-                }
-                var lines = alllines.ToList().Where(x => !string.IsNullOrEmpty(x) && !x.StartsWith(";") && !x.StartsWith("#")).Select(x => x.Trim())
-                .ToList();
-                string section = "default";
-                foreach (var line in lines)
-                {
-                    if (line.StartsWith("[") && line.EndsWith("]"))
-                    {
-                        section = line.Substring(1, line.Length - 2);
-                        if (!iniDictonary.ContainsKey(section))
-                        {
-                            ConcurrentDictionary<string, string> keyValuePairs = new();
-                            iniDictonary[section] = keyValuePairs;
-                        }
-                        continue;
-                    }
-                    string[] keyvaluepair = line.Split(new[] { '=' },2);
-
-                    if (section.Equals("default") || keyvaluepair.Length != 2)
-                    {
-                        throw new Exception("当前ini文件的格式不正确");
-                    }
-                    iniDictonary[section][keyvaluepair[0].Trim()] = keyvaluepair[1].Trim();
-
-                }
+                LoadIni();
                 isLoad = true;
 
             }
         }
+
+
     }
 }

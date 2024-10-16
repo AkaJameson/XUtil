@@ -11,27 +11,28 @@
         {
             _taskToRun = taskToRun ?? throw new ArgumentNullException(nameof(taskToRun));
             _timeout = timeout;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public void Start()
+        public PeriodicTaskRunner Start()
         {
             if (_runningTask != null)
             {
                 throw new InvalidOperationException("The periodic task is already running.");
             }
-            _cancellationTokenSource = new CancellationTokenSource();
+
             _runningTask = RunPeriodicTaskAsync(_cancellationTokenSource.Token);
-            return;
+            return this;
         }
 
-        public void Stop()
+        public PeriodicTaskRunner Stop()
         {
             if (_cancellationTokenSource != null)
             {
                 _cancellationTokenSource.Cancel();
                 _runningTask = null;
             }
-            return;
+            return this;
         }
 
         private async Task RunPeriodicTaskAsync(CancellationToken cancellationToken)

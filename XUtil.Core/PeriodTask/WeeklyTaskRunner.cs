@@ -13,27 +13,28 @@
             _taskToRun = taskToRun ?? throw new ArgumentNullException(nameof(taskToRun));
             _daysOfWeekToRun = daysOfWeekToRun ?? throw new ArgumentNullException(nameof(daysOfWeekToRun));
             _dailyRunTime = dailyRunTime;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public void Start()
+        public WeeklyTaskRunner Start()
         {
             if (_runningTask != null)
             {
                 throw new InvalidOperationException("已经运行.");
             }
-            _cancellationTokenSource = new CancellationTokenSource();
+
             _runningTask = RunWeeklyTaskAsync(_cancellationTokenSource.Token);
-            return;
+            return this;
         }
 
-        public void Stop()
+        public WeeklyTaskRunner Stop()
         {
             if (_cancellationTokenSource != null)
             {
                 _cancellationTokenSource.Cancel();
                 _runningTask = null;
             }
-            return;
+            return this;
         }
 
         private async Task RunWeeklyTaskAsync(CancellationToken cancellationToken)

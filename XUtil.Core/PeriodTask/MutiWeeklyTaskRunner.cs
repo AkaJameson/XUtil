@@ -17,27 +17,28 @@
             _dailyStartTime = dailyStartTime;
             _executionInterval = executionInterval;
             _executionCountPerDay = executionCountPerDay;
+            _cancellationTokenSource = new CancellationTokenSource();
         }
 
-        public void Start()
+        public MutiWeeklyTaskRunner Start()
         {
             if (_runningTask != null)
             {
                 throw new InvalidOperationException("任务已经在运行.");
             }
-            _cancellationTokenSource = new CancellationTokenSource();
+
             _runningTask = RunPeriodicTaskAsync(_cancellationTokenSource.Token);
-            return ;
+            return this;
         }
 
-        public void Stop()
+        public MutiWeeklyTaskRunner Stop()
         {
             if (_cancellationTokenSource != null)
             {
                 _cancellationTokenSource.Cancel();
                 _runningTask = null;
             }
-            return;
+            return this;
         }
 
         private async Task RunPeriodicTaskAsync(CancellationToken cancellationToken)

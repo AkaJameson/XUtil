@@ -41,7 +41,7 @@
             {
                 try
                 {
-                    await _taskToRun();
+                    _taskToRun();
                 }
                 catch (Exception ex)
                 {

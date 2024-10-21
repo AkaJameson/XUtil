@@ -46,7 +46,7 @@
                     var nextRunDelay = GetNextRunDelay();
                     Console.WriteLine($"下次运行时间: {nextRunDelay}");
                     await Task.Delay(nextRunDelay, cancellationToken); // 等待下一次运行时间到来
-                    await _taskToRun();
+                    _taskToRun();
                 }
                 catch (TaskCanceledException)
                 {

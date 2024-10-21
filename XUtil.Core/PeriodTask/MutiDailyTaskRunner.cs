@@ -59,7 +59,7 @@
                         }
 
                         Console.WriteLine($"第 {i + 1} 次任务执行");
-                        await _taskToRun();
+                        _taskToRun();
 
                         if (i < _executionCountPerDay - 1)  // 除了最后一次，等待下一个任务的间隔时间
                         {
